@@ -1,0 +1,945 @@
+{
+  "name": "scheduling-agent - v1",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "client_phone_number"
+            },
+            {
+              "name": "client_id",
+              "type": "number"
+            },
+            {
+              "name": "professional_name"
+            },
+            {
+              "name": "query"
+            },
+            {
+              "name": "allowed_times_and_days"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        560
+      ],
+      "id": "94c8d01c-5c6e-4041-af0f-721ba62b41f3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Set Fields').item.json.query }}",
+        "options": {
+          "systemMessage": "=---\nLa fecha actual es: \"{{ $('Set Fields').item.json.formatted_date }}\"\nEl teléfono del cliente es: \"{{ $('Set Fields').item.json.phone_number }}\"\nEl ID del cliente es: \"{{ $('Set Fields').item.json.client_id }}\"\nEl ID del calendario de Google es: \"{{ $('Set Fields').item.json.calendar_id }}\"\nLos días y horarios permitido para agendamientos son: \"{{ $('Set Fields').item.json.allowed_times_and_days }}\"\n---\n\n# ROL:\n\nEres el asistente de un Agente de IA que gestiona agendamientos, recibes una query del agente y dependiendo de la petición usas tus herramientas.\n\n---\n\n## REGLAS GENERALES:\n\nLas fechas deben indicarse en formato completo ISO 8601 con zona horaria. Ejemplo para el 1 de enero de 2025:\n\n- After: `2025-01-01T00:00:00-03:00`\n- Before: `2025-01-01T23:59:59-03:00`\n\n---\n\n## AGENDAR TURNO:\n\n1. Es verdad que cada servicio tiene un tiempo de duración diferente, pero tu debes agendar todos con una duración de 30 minutos.\n2. Comprobar la disponibilidad en el calendario usando la herramienta `get-availability`.\n3. Si hay disponibilidad crea el evento usando la herramienta `create-event`. Si no hay disponibilidad debes responder que no hay disponibilidad en ese horario, es IMPORTANTE que no agendes en un horario que no fue indicado en la consulta que recibiste.\n\n---\n\n## AVERIGUAR DISPONIBILIDAD:\n\n- Para averiguar la disponibilidad usa la herramienta `get-availability`.\n- Si la consulta es por un periodo y no un horario especifico, ejemplo:`Quiero saber la disponibilidad del jueves 17 de julio a la mañana`, debes buscar en bloques de media hora, debes buscar de 10 a 10:30, de 10:30 a 11, etc, y retornar los horarios en los que hay disponibilidad.\n- Para buscar disponibilidad a la mañana busca en bloques de media hora entre las 10 y las 12.\n- Para buscar disponibilidad a la tarde busca en bloques de media hora entre las 12 y las 18.\n- Para buscar disponibilidad a la noche busca en bloques de media hora entre las 18 y las 20.\n\n---\n\n## BUSCAR TURNO:\n\nSi el cliente solicita información sobre sus turnos agendados: Usa la herramienta `get-events` y retorna estos datos:\n\n- Servicio:\n- Fecha y Hora:\n- ID del evento:\n- ID del calendario:\n\nNo retornes el enlace al evento.\n\n---\n\n## CANCELAR TURNO:\n\n1. Usa la herramienta `get-events` para obtener el ID del evento y el ID del calendario (corresponde al \"email\" del objeto \"organizer\") donde fue agendado el evento.\n2. Usa la herramienta `delete-event` para eliminar el evento correspondiente, genera el valor del input \"calendar_id\" usando el valor de la propiedad \"email\" del objeto \"organizer\".\n\n---\n\n## MODIFICAR TURNO:\n\nSi el cliente desea modificar un turno existente:\n\n1. Usa la herramienta `update-event` para actualizar el evento.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        560
+      ],
+      "id": "e20fe543-32ef-4a1a-9921-39ae36d32088",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3af70b60-e42b-4179-883f-74f577587b21",
+              "name": "calendar_id",
+              "value": "={{ $json.calendarId }}",
+              "type": "string"
+            },
+            {
+              "id": "b766f2a0-285a-4c28-af50-f8776acadcec",
+              "name": "phone_number",
+              "value": "={{ $('When Executed by Another Workflow').item.json.client_phone_number }}",
+              "type": "string"
+            },
+            {
+              "id": "d5164858-2d92-4ccb-914b-30ddf09ae2a4",
+              "name": "client_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.client_id }}",
+              "type": "number"
+            },
+            {
+              "id": "42211f9e-196c-4499-a718-da1dcc9fda9f",
+              "name": "formatted_date",
+              "value": "={{ $('Date & Time').item.json.formatted_date }}",
+              "type": "string"
+            },
+            {
+              "id": "7da82ee2-de2a-4e08-bdf1-df830e4c86fa",
+              "name": "client_name",
+              "value": "={{ $('When Executed by Another Workflow').item.json.client_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e290d623-ca2a-467d-9454-7126a20a694a",
+              "name": "query",
+              "value": "={{ $('When Executed by Another Workflow').item.json.query }}",
+              "type": "string"
+            },
+            {
+              "id": "5c6a91fe-e004-40a8-8e36-7f3e3759e344",
+              "name": "allowed_times_and_days",
+              "value": "={{ $('When Executed by Another Workflow').item.json.allowed_times_and_days }}",
+              "type": "string"
+            },
+            {
+              "id": "57140413-1d4b-4adc-9eb6-e422a44e2771",
+              "name": "supabase_table_name",
+              "value": "tu_ia_agenda",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        560
+      ],
+      "id": "26bb43b7-950a-45b9-9b57-75d3055ca27f",
+      "name": "Set Fields"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $now }}",
+        "format": "custom",
+        "customFormat": "cccc, d 'de' LLLL 'de' y, 'y la hora es:' tt",
+        "outputFieldName": "formatted_date",
+        "options": {
+          "timezone": true
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        560
+      ],
+      "id": "9bb71c9f-42ee-4652-850d-0efbf4c5ce45",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "A3mEnBxRLgmH4VoN",
+          "mode": "list",
+          "cachedResultName": "calendar-operations - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "event_start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_start', ``, 'string') }}",
+            "event_end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_end', ``, 'string') }}",
+            "client_id": "={{ $('Set Fields').item.json.client_id }}",
+            "client_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_name', ``, 'string') }}",
+            "client_phone": "={{ $('Set Fields').item.json.phone_number }}",
+            "service": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('service', ``, 'string') }}",
+            "operation_type": "create_event",
+            "calendar_id": "={{ $('Set Fields').item.json.calendar_id }}",
+            "supabase_table_name": "={{ $('Set Fields').item.json.supabase_table_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "calendar_id",
+              "displayName": "calendar_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "operation_type",
+              "displayName": "operation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "supabase_table_name",
+              "displayName": "supabase_table_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "client_phone",
+              "displayName": "client_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "event_start",
+              "displayName": "event_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "event_end",
+              "displayName": "event_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2320,
+        780
+      ],
+      "id": "cb916b43-d491-4581-a962-add2c014aeb5",
+      "name": "create-event"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "A3mEnBxRLgmH4VoN",
+          "mode": "list",
+          "cachedResultName": "calendar-operations - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "calendar_id": "={{ $('Set Fields').item.json.calendar_id }}",
+            "operation_type": "get_availability",
+            "event_start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_start', ``, 'string') }}",
+            "event_end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_end', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "calendar_id",
+              "displayName": "calendar_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "operation_type",
+              "displayName": "operation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "supabase_table_name",
+              "displayName": "supabase_table_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": true
+            },
+            {
+              "id": "client_phone",
+              "displayName": "client_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "event_start",
+              "displayName": "event_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "event_end",
+              "displayName": "event_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2440,
+        780
+      ],
+      "id": "dfa53978-280c-417f-9339-383e4adb615a",
+      "name": "get-availability"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "A3mEnBxRLgmH4VoN",
+          "mode": "list",
+          "cachedResultName": "calendar-operations - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "calendar_id": "={{ $('Set Fields').item.json.calendar_id }}",
+            "operation_type": "get_events",
+            "supabase_table_name": "={{ $('Set Fields').item.json.supabase_table_name }}",
+            "client_id": "={{ $('Set Fields').item.json.client_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "calendar_id",
+              "displayName": "calendar_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "operation_type",
+              "displayName": "operation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "supabase_table_name",
+              "displayName": "supabase_table_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "client_phone",
+              "displayName": "client_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "event_start",
+              "displayName": "event_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "event_end",
+              "displayName": "event_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2560,
+        780
+      ],
+      "id": "022f7523-86f3-40dc-b094-14bfd684eb5f",
+      "name": "get-events"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "A3mEnBxRLgmH4VoN",
+          "mode": "list",
+          "cachedResultName": "calendar-operations - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "event_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_id', ``, 'string') }}",
+            "operation_type": "delete_event",
+            "calendar_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('calendar_id', ``, 'string') }}",
+            "supabase_table_name": "={{ $('Set Fields').item.json.supabase_table_name }}"
+          },
+          "matchingColumns": [
+            "event_id"
+          ],
+          "schema": [
+            {
+              "id": "calendar_id",
+              "displayName": "calendar_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "operation_type",
+              "displayName": "operation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "supabase_table_name",
+              "displayName": "supabase_table_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": true
+            },
+            {
+              "id": "client_phone",
+              "displayName": "client_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "event_start",
+              "displayName": "event_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "event_end",
+              "displayName": "event_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2680,
+        780
+      ],
+      "id": "0d69d2b2-8b49-4219-8cbd-5f743105fc27",
+      "name": "delete-event"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "A3mEnBxRLgmH4VoN",
+          "mode": "list",
+          "cachedResultName": "calendar-operations - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "event_start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_start', ``, 'string') }}",
+            "event_end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_end', ``, 'string') }}",
+            "client_id": "={{ $('Set Fields').item.json.client_id }}",
+            "client_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_name', ``, 'string') }}",
+            "client_phone": "={{ $('Set Fields').item.json.phone_number }}",
+            "service": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('service', ``, 'string') }}",
+            "operation_type": "update_event",
+            "calendar_id": "={{ $('Set Fields').item.json.calendar_id }}",
+            "supabase_table_name": "={{ $('Set Fields').item.json.supabase_table_name }}",
+            "event_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('event_id', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "calendar_id",
+              "displayName": "calendar_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "operation_type",
+              "displayName": "operation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "supabase_table_name",
+              "displayName": "supabase_table_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "client_phone",
+              "displayName": "client_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "event_start",
+              "displayName": "event_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "event_end",
+              "displayName": "event_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        2800,
+        780
+      ],
+      "id": "74f79a63-06e3-4932-b5cd-24e05ff2aed5",
+      "name": "update-event"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the person's name from the input data\nconst name = $('When Executed by Another Workflow').first().json.professional_name\n  ? $('When Executed by Another Workflow').first().json.professional_name.toLowerCase()\n  : null;\n\n// Map of names to calendar IDs\nconst calendarIds = {\n  ezequiel: \"a6095004e44b37b27cfaee60ae419c4f040772c07df5954a6584a68301816d1e@group.calendar.google.com\", // Replace with actual calendar ID\n  andrés:\n    \"679cca5ffd65c11e2f19ac8e74af44c22809ddd0539c5d41b1cb4ce1e83476ca@group.calendar.google.com\", // Replace with actual calendar ID\n  alejandro:\n    \"bcde2386a23461a76e23697c961a6d52366e32b0158568afc5aba4587695ea45@group.calendar.google.com\", // Replace with actual calendar ID\n};\n\n// Assign the corresponding ID or null if the name doesn't exist\nconst calendarId =\n  name && calendarIds.hasOwnProperty(name) ? calendarIds[name] : null;\n\n// Return the result\nreturn [\n  {\n    json: {\n      calendarId: calendarId,\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        560
+      ],
+      "id": "7311516f-3a3d-41a4-b122-eb6f522b0af6",
+      "name": "get-calendar-id"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        780
+      ],
+      "id": "3472e47d-465c-4f92-aa1d-53c7347e5490",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "zrmkVz9OjTv7XBQk",
+          "name": "DeepSeek account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "get-calendar-id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete-event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update-event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-calendar-id": {
+      "main": [
+        [
+          {
+            "node": "Set Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "name": "clean-database",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f5a3fac-e45f-4c5d-91a5-60a32d2a0172",
+              "name": "chatHistoriesTableName",
+              "value": "={{ $json.chatHistoriesTableName }}",
+              "type": "string"
+            },
+            {
+              "id": "35f2649d-5b6a-4e86-9c93-1c6677f1b58c",
+              "name": "numberOfRecordsToKeep",
+              "value": "={{ $json.numberOfRecordsToKeep }}",
+              "type": "number"
+            },
+            {
+              "id": "38eafa29-2339-4481-bb2e-299540d84d05",
+              "name": "agendaTableName",
+              "value": "={{ $json.agendaTableName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        -20
+      ],
+      "id": "6cf917d2-ae5b-41bf-9c60-f72f61a4c750",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM {{ $json.chatHistoriesTableName }}\nWHERE id NOT IN (\n  SELECT id\n  FROM (\n    SELECT id,\n           ROW_NUMBER() OVER (PARTITION BY session_id ORDER BY id DESC) AS rn\n    FROM {{ $json.chatHistoriesTableName }}\n  ) t\n  WHERE rn <= $2\n);",
+        "options": {
+          "queryReplacement": "={{ $json.chatHistoriesTableName }},{{ $json.numberOfRecordsToKeep }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        460,
+        -120
+      ],
+      "id": "0e41e3f3-7053-459d-aee8-c3a52eacb008",
+      "name": "Clean chat histories",
+      "credentials": {
+        "postgres": {
+          "id": "YK6uFr06cMcF6jq9",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM {{ $json.agendaTableName }} WHERE event_at < NOW();",
+        "options": {
+          "queryReplacement": "={{ $json.agendaTableName }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        460,
+        80
+      ],
+      "id": "c50a9fae-0424-49d1-9fb7-2f1b36dffe8a",
+      "name": "Clean agenda",
+      "credentials": {
+        "postgres": {
+          "id": "YK6uFr06cMcF6jq9",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chatHistoriesTableName"
+            },
+            {
+              "name": "numberOfRecordsToKeep",
+              "type": "number"
+            },
+            {
+              "name": "agendaTableName"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        -20
+      ],
+      "id": "2bc12a0d-9c1f-4d93-be47-f15232ea477d",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "connections": {
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "Clean chat histories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clean agenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

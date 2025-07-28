@@ -1,0 +1,587 @@
+{
+  "name": "update-client-instances - v1.1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        1000
+      ],
+      "id": "9d802228-3f78-4129-9d78-aaa1e71eee17",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input JSON\nlet data = $input.first().json;\n\n// List of properties to keep\nconst propertiesToKeep = ['name', 'nodes', 'connections', 'settings']; // Adjust with properties you want to retain\n\n// Create a new object with only the specified properties\nconst newData = {};\npropertiesToKeep.forEach(prop => {\n  if (prop in data) {\n    newData[prop] = data[prop];\n  }\n});\n\n// Set the settings property with the specified values\nnewData.settings = {\n  executionOrder: \"v1\",\n  executionTimeout: 300\n};\n\n// Return the modified JSON\nreturn [{ json: newData }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        140,
+        1000
+      ],
+      "id": "d68b63de-c6b7-443f-af8c-ebfb014af039",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "90JAgf2o1Fb4YUB4",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        200
+      ],
+      "id": "3c22b33c-14ba-49a9-9cf1-622e76b95fa6",
+      "name": "firewall"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $('Set data').item.json['flow-id-from-local-instance'] }}",
+          "mode": "id"
+        },
+        "workflowObject": "={{ $json.toJsonString() }}",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        360,
+        1000
+      ],
+      "id": "c91b8c03-a923-4ccb-8f99-41b710b14fdd",
+      "name": "Update local instance flow",
+      "credentials": {
+        "n8nApi": {
+          "id": "xskn4HABijssqgcp",
+          "name": "n8n account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $json['flow-id-from-workflows-library'] }}",
+          "mode": "id"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        1000
+      ],
+      "id": "2f214674-dce5-4946-87c4-8abd1ec61804",
+      "name": "Get flow from workflows-library",
+      "credentials": {
+        "n8nApi": {
+          "id": "xskn4HABijssqgcp",
+          "name": "n8n account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "PhtBjmpScsY7YrrN",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        0
+      ],
+      "id": "55c8af77-27e5-4112-b600-cd7c700c18a5",
+      "name": "detect-language"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "kvDyVepRpHFbff8h",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        1200
+      ],
+      "id": "9def8c5c-f7c5-433d-8c73-7ae0c01b3f52",
+      "name": "human-pause"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ffffdc5f-dc3a-4ace-a1cc-ae6dcee96c5f",
+              "name": "flow-id-from-workflows-library",
+              "value": "={{ $json['flow-id-from-workflows-library'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a5fd569d-b3b2-4cd8-9091-e2b88288455e",
+              "name": "flow-id-from-local-instance",
+              "value": "={{ $json['flow-id-from-local-instance'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -300,
+        1000
+      ],
+      "id": "13b7375d-c62a-4a14-b35a-0801a3f4d9a1",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "o88GDhdNEmtzg9SY",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        400
+      ],
+      "id": "baac69f5-a282-45a6-80fa-405b92b05927",
+      "name": "build-system-message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "uXKbJFPDBH3efcmA",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        600
+      ],
+      "id": "198a4285-57a3-4dcc-b56d-8cef79466e80",
+      "name": "transcribe-media"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "xZDlv3ZFE1h36MYb",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        800
+      ],
+      "id": "acda6dca-7182-4478-bea0-61add45d0a65",
+      "name": "message-buffer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "kI0ZWzuRYYcbssQ8",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        1000
+      ],
+      "id": "b9230156-4257-44f0-b3e5-4074944d1959",
+      "name": "expert-resolver"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "A3mEnBxRLgmH4VoN",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        1600
+      ],
+      "id": "80e7d642-5520-46c5-b464-f598ba131094",
+      "name": "calendar-operations"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "brIgVwWnGwnS279c",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        1400
+      ],
+      "id": "47ca9ee8-62f1-43f6-b9d8-a6b448b2b570",
+      "name": "update-client-instances"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "PKkA7XvNjOHsVVJP",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        1800
+      ],
+      "id": "7f54e1aa-5a2e-4989-96e1-b3527fe5a577",
+      "name": "scheduling-agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec39c962-43b9-4339-a0d9-ad8611788db5",
+              "name": "flow-id-from-workflows-library",
+              "value": "mzvNC7jcWWGvlZOE",
+              "type": "string"
+            },
+            {
+              "id": "5c28072a-68a7-41e8-9831-fb4ab6b2a121",
+              "name": "flow-id-from-local-instance",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        2000
+      ],
+      "id": "682e7f15-939a-4189-9df0-de58641f1426",
+      "name": "clean-database"
+    }
+  ],
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Update local instance flow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "firewall": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get flow from workflows-library": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "detect-language": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "human-pause": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "Get flow from workflows-library",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build-system-message": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcribe-media": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "message-buffer": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "expert-resolver": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update-client-instances": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendar-operations": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "scheduling-agent": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean-database": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
