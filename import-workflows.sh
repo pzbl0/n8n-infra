@@ -2,7 +2,7 @@
 
 # Load variables from .env file
 set -o allexport
-source .env
+source .env-import-workflows
 set +o allexport
 
 WORKFLOW_DIR="workflows"

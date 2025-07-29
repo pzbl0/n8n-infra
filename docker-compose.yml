@@ -3,10 +3,11 @@ services:
     image: n8nio/n8n
     restart: always
     ports:
-      - "${N8N_HOST_PORT:-5678}:5678"
+      - "5678:5678"
     environment:
       - N8N_HOST=${N8N_HOST}
       - N8N_PORT=5678
+      - N8N_PROTOCOL=https
       - N8N_EXECUTIONS_PROCESS=queue
       - N8N_QUEUE_REDIS_URL=redis://redis:6379
       - N8N_DB_TYPE=postgresdb
@@ -31,7 +32,6 @@ services:
       - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=all
       - EXECUTIONS_TIMEOUT=300
     volumes:
-      - /home/pzblo/projects/infra/workflows:/home/node/workflows
       - n8n_data:/home/node/.n8n
     depends_on:
       - redis
