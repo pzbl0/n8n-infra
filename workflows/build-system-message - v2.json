@@ -1,0 +1,524 @@
+{
+  "name": "build-system-message - v2",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "language"
+            },
+            {
+              "name": "business_name"
+            },
+            {
+              "name": "conversation_id",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -432,
+        -232
+      ],
+      "id": "40e0a264-bc7d-449e-a0ed-0391edc0d4a0",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $now }}",
+        "format": "custom",
+        "customFormat": "cccc, LLLL d 'of' y, 'y la hora es:' tt",
+        "outputFieldName": "formatted_date",
+        "options": {
+          "timezone": true
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -232
+      ],
+      "id": "7ea1d44c-37fc-4f27-a294-70410436c5e4",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea4f8534-7ea3-4f6a-94c3-4ff2c715fb44",
+              "name": "language",
+              "value": "={{ $('When Executed by Another Workflow').item.json.language }}",
+              "type": "string"
+            },
+            {
+              "id": "71f30ea0-5293-4b37-b898-c7f2be9b3cf7",
+              "name": "date_and_time",
+              "value": "={{ $json.formatted_date }}",
+              "type": "string"
+            },
+            {
+              "id": "a96842ac-a81b-43d6-83d3-be47ba8740f2",
+              "name": "general_instructions",
+              "value": "={{ $('Get system prompts').item.json['General instructions'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1a103297-fc14-4015-8c6f-fe652f7b2e2b",
+              "name": "final_check",
+              "value": "={{ $('Get system prompts').item.json['Final check'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        -232
+      ],
+      "id": "11481185-8b65-4b20-bda9-79f5ae9cd29a",
+      "name": "general-data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "98bd2181-146a-4967-b294-e04e82b8745c",
+              "name": "bot_name",
+              "value": "={{ $('Get client data').first().json['¿Cómo querés que me llame?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d5a53eea-7d67-4c3f-976d-dcf01ec2570d",
+              "name": "company_name",
+              "value": "={{ $('Get client data').first().json['¿Cuál es el nombre de la empresa/emprendedor para el qué trabajo?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "efaea4e6-31b0-447a-93a4-9b4e9942b8a6",
+              "name": "company_description",
+              "value": "={{ $('Get client data').first().json['¿A qué se dedica la empresa/emprendedor para el qué trabajo?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9ea1641c-f090-40c4-ac40-cf706d809d10",
+              "name": "bot_description",
+              "value": "={{ $('Get client data').first().json['¿En qué me especializo yo?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "b38ef601-dd02-4627-b49f-853fc2a5b9d7",
+              "name": "bot_task",
+              "value": "={{ $('Get client data').first().json['¿Cuál es mi tarea principal?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6d9bde0b-a05d-4861-b7a9-0921b65ab9eb",
+              "name": "bot_instructions",
+              "value": "={{ $('Get client data').first().json['Mis instrucciones'] }}",
+              "type": "string"
+            },
+            {
+              "id": "33ebafe4-db2b-4bf0-88af-ee5c209465a6",
+              "name": "bot_context",
+              "value": "={{ $('Get client data').first().json['Mi contexto'] }}",
+              "type": "string"
+            },
+            {
+              "id": "291f9e52-6660-4e75-97f3-429f121bda05",
+              "name": "bot_personality",
+              "value": "={{ $('Get client data').first().json[\"¿Cuál es mi tono y estilo al hablar?\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        -232
+      ],
+      "id": "09a5a623-e714-4f57-a87e-6a0a686d80c6",
+      "name": "bot-data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71dad324-e3fb-46c7-a2c4-795b48b67523",
+              "name": "agent_main",
+              "value": "=---\nEl idioma de tu output debe ser: \"{{ $('general-data').first().json.language }}\"\nHoy es: \"{{ $('general-data').first().json.date_and_time }}\"\n---\n\n## ROL:\n\nEres \"{{ $('bot-data').first().json.bot_name }}\", el asistente virtual de \"{{ $('bot-data').first().json.company_name }}\", una empresa dedicada a \"{{ $('bot-data').first().json.company_description }}\". Te especializas en \"{{ $('bot-data').first().json.bot_description }}\" y atendés a clientes por WhatsApp con respuestas breves siguiendo estrictamente las instrucciones que te son indicadas.\n\n---\n\n## TAREA:\n\nTu objetivo principal es \"{{ $('bot-data').first().json.bot_task }}\".\n\n---\n\n## INSTRUCCIONES GENERALES:\n\n{{ $('general-data').first().json.general_instructions }}\n\n---\n\n## INSTRUCCIONES ESPECÍFICAS (alguna de estas instrucciones pueden sobreescribir las instrucciones generales):\n\n{{ $('bot-data').first().json.bot_instructions }}\n\n---\n\n## CONTEXTO:\n\n{{ $('bot-data').first().json.bot_context }}\n\n## HISTÓRICO DE LA CONVERSACIÓN:\n\n{{ $('Code').first().json.formattedText }}\n\n---\n\n## TU RESPUESTA:\n\nAntes de responder debes considerar lo siguiente y aplicar lo que puedas a tu respuesta:\n\n{{ $('general-data').first().json.final_check }}",
+              "type": "string"
+            },
+            {
+              "id": "e704b419-8a35-4830-8493-6372ae3c9a87",
+              "name": "tool_company_info",
+              "value": "Si el cliente consulta por la ubicación de la empresa, los horarios de atención, los métodos o políticas de pago, los métodos o políticas de envío, las redes sociales o el sitio web, o cualquier otra información propia de la empresa usa la herramienta `company-info` para responder. Si la herramienta no te devuelve información útil, di que no tienes esa información y ofrece contactar a un representante del equipo.",
+              "type": "string"
+            },
+            {
+              "id": "c17151f3-4b29-4285-9161-53f67df9af04",
+              "name": "agent_agent_assistant",
+              "value": "=Eres el asistente de un agente ia, no hablas directamente con el cliente. Recibes una consulta del agente ia y usas tu system_message para brindar la información requerida. Si no dispones de la información no la inventas, respondes que no tienes esa información.\n\n## INFORMACIÓN DE LA EMPRESA:\n\nUbicación: \"{{ $('company-data').first().json.location }}\".\nHorario de atención: \"{{ $('company-data').first().json.business_hours }}\".\nMétodos y políticas de pago: \"{{ $('company-data').first().json.payment_policies }}\".\nMétodos y políticas de envío: \"{{ $('company-data').first().json.shipping_policies }}\".\nRedes sociales y sitio web: \"{{ $('company-data').first().json.website_and_social_media }}\".",
+              "type": "string"
+            },
+            {
+              "id": "5ff9f2f8-c3b0-488a-803d-3acef4e72ba3",
+              "name": "agent_refiner",
+              "value": "=## ROL:\n\nEres un agente especializado en pulir las respuestas generadas por otro agente de IA antes de que lleguen al usuario.\n\n- A la respuesta original generada por la IA la llamaremos **respuesta-de-la-ia**.\n- A tu versión mejorada la llamaremos **respuesta-final**, que será la que reciba el usuario.\n\n---\n\n## CONTEXTO:\n\n- El idioma de tu output debe ser: \"{{ $('general-data').first().json.language }}\"\n- Hoy es: \"{{ $('general-data').first().json.date_and_time }}\"\n- Te llamas: {{ $('bot-data').item.json.bot_name }}\n\n---\n\n## TAREA:\n\nTu tarea es mantener el contenido esencial de la respuesta-de-la-ia, pero adaptarlo siguiendo las siguientes instrucciones y estilo de personalidad:\n\n{{ $('bot-data').item.json.bot_personality }}\n\n- Estás atendiendo por el WhatsApp oficial de la empresa. Nunca digas que el usuario debe contactar a la empresa (ya lo está haciendo). Si la respuesta-de-la-ia indica eso, **corrígelo** diciendo que alguien del equipo se pondrá en contacto por este medio, aunque puede tardar un poco.\n- Formatea el texto para que se vea bien en WhatsApp.\n\n- No repitas ideas ya expresadas a menos que el usuario haya insistido en algo.\n\n- Ten en cuenta el **historial de conversación** al generar la respuesta-final.\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        -232
+      ],
+      "id": "22690e77-ac81-425f-a669-2073a5bfa3db",
+      "name": "system_messages"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1619008e-f62b-42a2-b63d-6613937e0e94",
+              "name": "location",
+              "value": "={{ $('Get client data').first().json['Ubicación'] }}",
+              "type": "string"
+            },
+            {
+              "id": "cb8ddb31-f39d-4a8e-8cfb-edb8401164e4",
+              "name": "business_hours",
+              "value": "={{ $('Get client data').first().json['Horarios de atención al cliente'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2bb78966-15d9-4b6a-a862-ffc5f0c3ea81",
+              "name": "payment_policies",
+              "value": "={{ $('Get client data').first().json['Métodos y políticas de pago'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0777d62d-28a0-4a97-bdeb-f7905b317d39",
+              "name": "shipping_policies",
+              "value": "={{ $('Get client data').first().json['Métodos y políticas de envío'] }}",
+              "type": "string"
+            },
+            {
+              "id": "5bfacf46-b6dc-4052-ac9e-72b2b83afd3e",
+              "name": "website_and_social_media",
+              "value": "={{ $('Get client data').first().json['Sitio web y redes sociales'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1584,
+        -304
+      ],
+      "id": "41895a75-9c42-491b-9090-a48519e64b57",
+      "name": "company-data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "217e9994-126e-4097-9dc3-d25b0153523c",
+              "leftValue": "={{ $('Get client data').first().json['¿Querés que brinde información sobre tu empresa?'] }}",
+              "rightValue": "Sí",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1360,
+        -232
+      ],
+      "id": "9b923dbc-ba6f-4823-a76c-9e32730e124c",
+      "name": "If company data"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1tRuRZ9YS9xa5N6yeWeIYdjgkmK-mRxTqz7tnqFwRxSU",
+          "mode": "list",
+          "cachedResultName": "Asesor de servicio (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tRuRZ9YS9xa5N6yeWeIYdjgkmK-mRxTqz7tnqFwRxSU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json.business_name }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        16,
+        -232
+      ],
+      "id": "b0624967-85dd-4dd1-bc39-584f26e03633",
+      "name": "Get client data",
+      "credentials": {
+        "googleApi": {
+          "id": "UDitTNIuZ8oToriK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "18P4WzV-2rCe8UbDeV3zCxHRNPXs_3bmTEAvnCPDZvgM",
+          "mode": "list",
+          "cachedResultName": "system-prompts (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18P4WzV-2rCe8UbDeV3zCxHRNPXs_3bmTEAvnCPDZvgM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 814483702,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18P4WzV-2rCe8UbDeV3zCxHRNPXs_3bmTEAvnCPDZvgM/edit#gid=814483702"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -208,
+        -232
+      ],
+      "id": "058e394a-4704-4f62-a1e5-690eeeb1ad1e",
+      "name": "Get system prompts",
+      "credentials": {
+        "googleApi": {
+          "id": "UDitTNIuZ8oToriK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json.business_name }}_n8n_chat_histories",
+          "mode": "name"
+        },
+        "limit": 20,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.conversation_id.toString() }}"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": [
+            "message"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        688,
+        -232
+      ],
+      "id": "3f8eea65-8d2a-4836-a76f-417a352c559c",
+      "name": "Select rows from a table",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "xKI0Rsj9nPwMEm0Q",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and transform messages into a simplified array with sender and text\nconst messages = items\n  .map(item => {\n    const msg = item.json?.message;\n    if (!msg?.type || !msg?.content) return null;\n\n    const sender = msg.type === 'human' ? 'user' : 'bot';\n    let text = msg.content;\n\n    // Attempt to parse bot response if it's in JSON format\n    if (sender === 'bot') {\n      try {\n        const parsed = JSON.parse(text);\n        if (parsed.output?.text) {\n          text = parsed.output.text;\n        }\n      } catch (e) {\n        // Leave text as is if parsing fails\n      }\n    }\n\n    return { sender, text };\n  })\n  .filter(Boolean); // Remove null entries\n\n// If no valid messages, return fallback message\nif (messages.length === 0) {\n  return [\n    {\n      json: {\n        formattedText: \"No hay interacciones anteriores\"\n      }\n    }\n  ];\n}\n\n// Group user-bot message pairs into formatted text\nlet output = '';\nlet count = 1;\n\nfor (let i = 0; i < messages.length; i++) {\n  if (messages[i].sender === 'user' && messages[i + 1]?.sender === 'bot') {\n    output += `Interacción ${count}:\\nUsuario: ${messages[i].text}\\nBot: ${messages[i + 1].text}\\n\\n`;\n    count++;\n    i++; // Skip the bot message as it's already paired\n  }\n}\n\n// If no valid user-bot pairs were found\nif (output.trim() === '') {\n  return [\n    {\n      json: {\n        formattedText: \"No hay interacciones anteriores.\"\n      }\n    }\n  ];\n}\n\nreturn [\n  {\n    json: {\n      formattedText: output.trim()\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        -232
+      ],
+      "id": "dccaa944-f8b6-4bc2-ad9f-c4a065763f9e",
+      "name": "Code"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get system prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "general-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "general-data": {
+      "main": [
+        [
+          {
+            "node": "Select rows from a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bot-data": {
+      "main": [
+        [
+          {
+            "node": "If company data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "company-data": {
+      "main": [
+        [
+          {
+            "node": "system_messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If company data": {
+      "main": [
+        [
+          {
+            "node": "company-data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "system_messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get client data": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get system prompts": {
+      "main": [
+        [
+          {
+            "node": "Get client data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "bot-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
