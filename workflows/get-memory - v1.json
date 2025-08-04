@@ -1,0 +1,132 @@
+{
+  "name": "get-memory - v1",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $json.client_name }}_n8n_chat_histories",
+          "mode": "name"
+        },
+        "limit": 20,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $json.conversation_id.toString() }}"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": ["message"]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [1232, -672],
+      "id": "eb0938fa-4fb3-481b-a012-4a1f9aeddb75",
+      "name": "Select rows from a table",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "Y1RUG2vFML6HumNF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and transform messages into a simplified array with sender and text\nconst messages = items\n  .map(item => {\n    const msg = item.json?.message;\n    if (!msg?.type || !msg?.content) return null;\n\n    const sender = msg.type === 'human' ? 'user' : 'bot';\n    let text = msg.content;\n\n    // Attempt to parse bot response if it's in JSON format\n    if (sender === 'bot') {\n      try {\n        const parsed = JSON.parse(text);\n        if (parsed.output?.text) {\n          text = parsed.output.text;\n        }\n      } catch (e) {\n        // Leave text as is if parsing fails\n      }\n    }\n\n    return { sender, text };\n  })\n  .filter(Boolean); // Remove null entries\n\n// If no valid messages, return fallback message\nif (messages.length === 0) {\n  return [\n    {\n      json: {\n        formattedText: \"No hay interacciones anteriores\"\n      }\n    }\n  ];\n}\n\n// Group user-bot message pairs into formatted text\nlet output = '';\nlet count = 1;\n\nfor (let i = 0; i < messages.length; i++) {\n  if (messages[i].sender === 'user' && messages[i + 1]?.sender === 'bot') {\n    output += `Interacción ${count}:\\nHuman: ${messages[i].text}\\nAI: ${messages[i + 1].text}\\n\\n`;\n    count++;\n    i++; // Skip the bot message as it's already paired\n  }\n}\n\n// If no valid user-bot pairs were found\nif (output.trim() === '') {\n  return [\n    {\n      json: {\n        formattedText: \"No hay interacciones anteriores\"\n      }\n    }\n  ];\n}\n\nreturn [\n  {\n    json: {\n      formattedText: output.trim()\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1456, -672],
+      "id": "58c08104-8ee9-44fd-87be-3ed239618f66",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "client_name"
+            },
+            {
+              "name": "conversation_id",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "f8c1d194-8f59-46af-82d1-6ba793c22944",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [1008, -672]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "20507310-c426-41d2-af2c-21e19843ab28",
+              "name": "chat_history",
+              "value": "={{ $json.formattedText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1680, -672],
+      "id": "8874ae79-3ac0-4463-be6e-7d0bd6f0884f",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "Select rows from a table": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Select rows from a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

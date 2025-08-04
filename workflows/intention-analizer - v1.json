@@ -1,0 +1,172 @@
+{
+  "name": "intention-analizer - v1",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1456, -240],
+      "id": "0b91fabb-204f-4fc0-8816-205e0e3209df",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "3asqIn4mAiOhjOct",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n{\n\"require\": \"informacion-general\",\n\"why\": \"porque el usuario preguntó el horario de atención\"\n},\n{\n\"require\": \"buscador-de-productos\",\n\"why\": \"porque el usuario preguntó por disponibilidad del producto X\"\n}\n]",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [1360, -448],
+      "id": "5209b6c5-1267-4bdb-8752-2e64317a8cf9",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [1232, -448],
+      "id": "ac75e035-b90d-4532-88ac-27cdf1c164db",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "3asqIn4mAiOhjOct",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Este es el último mensaje del usuario: {{ $('Start').item.json.user_message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "={{ $('Start').item.json.system_messsage }}\n\n---\n\n### Entrada:\n\n\"chat_history\":\n\"{{ $('Start').item.json.chat_history }}\"\n\nÚltimo mensaje del usuario:\n\"{{ $('Start').item.json.user_message }}\"\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [1248, -672],
+      "id": "8bdd6fd3-5b9f-4792-9de3-64eee76c4d18",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "client_name"
+            },
+            {
+              "name": "user_message"
+            },
+            {
+              "name": "conversation_id",
+              "type": "number"
+            },
+            {
+              "name": "chat_history"
+            },
+            {
+              "name": "system_messsage"
+            }
+          ]
+        }
+      },
+      "id": "e3380111-7a34-497c-aa4a-fa25f04b9f1b",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [1008, -672]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1760, -672],
+      "id": "2149319c-dbdb-4271-86cf-8df3ac60058e",
+      "name": "Continue"
+    }
+  ],
+  "connections": {
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
