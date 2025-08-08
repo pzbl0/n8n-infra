@@ -1,0 +1,705 @@
+{
+  "name": "lead-reactivation - v1",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "url"
+            },
+            {
+              "name": "client_name"
+            },
+            {
+              "name": "account_id",
+              "type": "number"
+            },
+            {
+              "name": "session_id",
+              "type": "number"
+            },
+            {
+              "name": "user_message"
+            },
+            {
+              "name": "campaing_text_to_recognize"
+            },
+            {
+              "name": "time_to_reactivate_in_hours",
+              "type": "number"
+            },
+            {
+              "name": "text_to_reactive"
+            }
+          ]
+        }
+      },
+      "id": "53ab44a5-02e2-4bbf-b75c-e80d39dc56b7",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -960,
+        -608
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "57ad293e-f8f7-44fc-a871-f09d68d3c7a5",
+              "leftValue": "={{ $('Set data').item.json.user_message }}",
+              "rightValue": "={{ $('Set data').item.json.campaing_text }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -512,
+        -608
+      ],
+      "id": "0f6f4b38-fecc-4e1b-9b9f-e8907cc16614",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -320
+      ],
+      "id": "3e9f0633-2abe-43a7-8885-291fe6eedf81",
+      "name": "Continue1"
+    },
+    {
+      "parameters": {
+        "tableId": "={{ $('Set data').item.json.client_name }}_campaigns",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "session_id",
+              "fieldValue": "={{ $('Set data').item.json.session_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -800
+      ],
+      "id": "9849c909-d6ed-4429-8d75-b02b4b8c025d",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": "={{ $('Set data').item.json.time_to_reactivate_in_hours }}",
+        "unit": "hours"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -64,
+        -800
+      ],
+      "id": "7ab491b4-78b4-49e5-a198-e457f422d247",
+      "name": "Wait",
+      "webhookId": "90cfaf2f-9baf-454c-a228-9de750c18387"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "={{ $('Start').item.json.client_name }}_campaigns",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "session_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Set data').item.json.session_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -896
+      ],
+      "id": "faa90ddc-9e21-4ada-86eb-b0d8ce7e7cfa",
+      "name": "Delete a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set data').item.json.url }}/api/v1/accounts/{{ $('Set data').item.json.account_id }}/conversations/{{ $('Set data').item.json.session_id }}/messages/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Set data').item.json.text_to_reactive }}"
+            },
+            {
+              "name": "private",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        -896
+      ],
+      "id": "338b124d-140a-46dc-8d4b-cb27eb4e1a42",
+      "name": "Send message",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nWyAJQsTprwGKxtE",
+          "name": "Chatwoot - Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79779794-702d-42bf-8cac-a3d185352520",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "89d62bc8-1d9c-416b-8c23-d3eba9052277",
+              "name": "client_name",
+              "value": "={{ $json.client_name }}",
+              "type": "string"
+            },
+            {
+              "id": "4d05e630-b125-4a84-8160-7ee4bf6b7b8a",
+              "name": "account_id",
+              "value": "={{ $json.account_id }}",
+              "type": "string"
+            },
+            {
+              "id": "eb54c636-1348-4e84-90bc-d50462cfaa04",
+              "name": "session_id",
+              "value": "={{ $json.session_id }}",
+              "type": "string"
+            },
+            {
+              "id": "440ffc1d-c165-498b-8acb-58acdadffb24",
+              "name": "user_message",
+              "value": "={{ $json.user_message }}",
+              "type": "string"
+            },
+            {
+              "id": "4a99889f-4277-47ed-ad58-b600f57de4c1",
+              "name": "campaing_text",
+              "value": "={{ $json.campaing_text_to_recognize }}",
+              "type": "string"
+            },
+            {
+              "id": "ed4f59d4-4091-4ce4-8b89-4dbae1c72ffc",
+              "name": "time_to_reactivate_in_hours",
+              "value": "={{ $json.time_to_reactivate_in_hours }}",
+              "type": "number"
+            },
+            {
+              "id": "a06e674a-f481-44da-86c1-e684ae579588",
+              "name": "text_to_reactive",
+              "value": "={{ $json.text_to_reactive }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -736,
+        -608
+      ],
+      "id": "274953e0-b3b1-4338-912d-6f3f9e543fc2",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3c86a605-fb56-4c6b-97d1-792937d10f4d",
+              "leftValue": "0",
+              "rightValue": "1",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        -704
+      ],
+      "id": "ed4d0261-fc68-4486-a755-79e9a388318c",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "daaa1621-c6e2-4102-b84e-9ab42d32051a",
+              "leftValue": "0",
+              "rightValue": "1",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        -896
+      ],
+      "id": "0cbd399b-75a3-4837-a2e1-acfa202415a2",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -608
+      ],
+      "id": "0c54e535-d849-4eb1-ba12-5d22d53e174c",
+      "name": "Continue"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        384,
+        -512
+      ],
+      "id": "d17d0c9c-21bd-42e2-be9c-82fa4907e554",
+      "name": "Continue2"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Set data').item.json.client_name }}_{{ $('Set data').item.json.account_id }}_{{ $('Set data').item.json.session_id }}",
+        "messageData": "={\"last_message_content\": \"{{ $json.content }}\"}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        -896
+      ],
+      "id": "20af879c-15ce-439b-af04-0555c485c875",
+      "name": "Save last message",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "29c522f6-ba58-4f67-b7ec-f1a5795a438b",
+              "leftValue": "={{ $input.all() }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "array",
+                "operation": "lengthGt",
+                "rightType": "number"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        -800
+      ],
+      "id": "76f98a93-d5d8-433a-bf71-8822c07da31f",
+      "name": "If still there"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e4ae1dcb-94f5-41b6-8d04-f1e3fbb9afb5",
+              "leftValue": "={{ $('Get a row').item.json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        -416
+      ],
+      "id": "84601ce8-fd7b-40f3-95cf-7b0085391019",
+      "name": "If there is row"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "={{ $('Start').item.json.client_name }}_campaigns",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "session_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Set data').item.json.session_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -512
+      ],
+      "id": "c65cd555-73d9-4787-b62a-7ba73a4e9fc9",
+      "name": "Delete it",
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "={{ $('Set data').item.json.client_name }}_campaigns",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "session_id",
+              "keyValue": "={{ $('Set data').item.json.session_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -800
+      ],
+      "id": "e60a4721-880e-4d49-b928-f92d25af31d8",
+      "name": "Get the row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "={{ $('Set data').item.json.client_name }}_campaigns",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "session_id",
+              "keyValue": "={{ $('Set data').item.json.session_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -416
+      ],
+      "id": "0cd8b7fe-921c-4f36-9ac2-c83530558b94",
+      "name": "Get a row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Continue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get the row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a row": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message": {
+      "main": [
+        [
+          {
+            "node": "Save last message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save last message": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If still there": {
+      "main": [
+        [
+          {
+            "node": "Delete a row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If there is row": {
+      "main": [
+        [
+          {
+            "node": "Delete it",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Continue1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete it": {
+      "main": [
+        [
+          {
+            "node": "Continue2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the row": {
+      "main": [
+        [
+          {
+            "node": "If still there",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "If there is row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

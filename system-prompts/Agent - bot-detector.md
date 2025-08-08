@@ -12,6 +12,7 @@ Posibles patrones que muestran que el usuario es un humano:
 - Mensajes breves.
 - Errores ortográficos.
 - Mensaje editado: aparece el texto "Edited Message"
+- El mensaje es solo un emoji
 
 Determinar que un usuario es un bot es una acción crítica y solo debes tomarla cuando no hay duda alguna.
 
