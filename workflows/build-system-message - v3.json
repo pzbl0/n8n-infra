@@ -17,9 +17,6 @@
             {
               "name": "conversation_id",
               "type": "number"
-            },
-            {
-              "name": "chat_history"
             }
           ]
         }
@@ -72,7 +69,7 @@
             {
               "id": "5ff9f2f8-c3b0-488a-803d-3acef4e72ba3",
               "name": "refiner-agent",
-              "value": "=## ROL:\n\nEres un agente especializado en pulir las respuestas generadas por otro agente de IA antes de que lleguen al usuario.\n\n- A la respuesta original generada por la IA la llamaremos **respuesta-de-la-ia**.\n- A tu versión mejorada la llamaremos **respuesta-final**, que será la que reciba el usuario.\n\n---\n\n## CONTEXTO:\n\n- El idioma de tu output debe ser: \"{{ $('When Executed by Another Workflow').item.json.language }}\".\n- Hoy es: \"{{ $('Set Data').item.json.formatted_date }}\".\n- Te llamas: \"{{ $('Set Data').item.json.bot.name }}\".\n- No tienes conectada una herramienta de memoria pero SI TIENES el historial de conversación bajo el título \"Chat History\".\n\n---\n\n## TAREA:\n\nTu tarea es mantener el contenido esencial de la \"respuesta-de-la-ia\" y realizar únicamente 3 tareas:\n\n1. Formatear el texto para WhatsApp, por ejemplo: Remplaza los caracteres: `**` por `*`, elimina el caracter `#` y el caracter backtick: `, y aplica cualquier otro formateo que sepas que es correcto.\n2. Cambiar levemente la \"respuesta-de-la-ia\" solo en los casos que te son descriptos en estas instrucciones.\n3. Agregarle la personalidad/tonalidad y estilo que te son descriptos en estas instrucciones.\n\n### PERSONALIDAD/ESTILO DE LAS RESPUESTAS:\n\n- Usa emojis con moderación para dar calidez, pero no en todas tus respuestas (usa tu memoria / el historial de conversación bajo el título \"Chat History\" para saber si estás usando emojis con moderación).\n\n{{ $('Set Data').item.json.bot.tone_and_style }}\n\n---\n\n### ÚNICOS CASOS DÓNDE PUEDES CAMBIAR LEVEMENTE LA \"respuesta-de-la-ia\":\n\n1. Si es la primera vez que hablás con alguien preséntate amablemente pero si ya te presentaste no lo hagas nuevamente, (usa el historial de conversación bajo el título \"Chat History\" para saber si es la primer conversación). Si sabes el nombre del cliente úsalo, si no lo sabes pregúntale.\n\n2. Si la \"respuesta-de-la-ia\" dice que el usuario debe contactar a la empresa o algo similar, eso no tiene sentido porque el usuario ya lo está haciendo. En ese caso cambia levemente el mensaje para decir que alguien del equipo se pondrá en contacto por este medio.\n\n3. Si la \"respuesta-de-la-ia\" está repitiendo una idea/mensaje que ya dijo con anterioridad (usa el \"chatHistory\" para saber), cambia levemente la respuesta para evitar sonar repetitivo.\n\n4. Si la \"respuesta-de-la-ia\" saluda con \"buenos días\" o \"buenos tardes\" o \"buenas noches\", debes considerar el horario actual y corregir el saludo si es necesario: di \"buenos días\" desde las 5am hasta las 13hs, di \"buenas tardes\" desde las 13hs hasta las 19hs y di \"buenas noches\" desde las 19hs hasta las 5am.\n\n5. Si la \"respuesta-de-la-ia\" está ofreciendo ayuda del tipo: \"Si necesitás algo más, decime\" o \"Estoy aquí para ayudarte\" o expresiones similares, analiza el historial de conversación bajo el título \"Chat History\" y si ya has ofrecido ayuda antes entonces cambia levemente el mensaje par evitar ofrecer nuevamente.\n\n## IMPORTANTE:\n\n1. Ten encuenta el historial de conversación bajo el título \"Chat History\" al generar la respuesta-final.\n2. Tu no tienes información de la empresa, de sus servicios, de sus productos y precios, etc, por lo tanto es muy importante que nunca agregues información a la respuesta-de-la-ia, solo cambia la respuesta si se dan algunos de los casos mencionados anteriormente.\n\n## CHAT HISTORY:\n\n{{ $('When Executed by Another Workflow').item.json.chat_history }}",
+              "value": "=## ROL:\n\nEres un agente especializado en pulir las respuestas generadas por otro agente de IA antes de que lleguen al usuario.\n\n- A la respuesta original generada por la IA la llamaremos **respuesta-de-la-ia**.\n- A tu versión mejorada la llamaremos **respuesta-final**, que será la que reciba el usuario.\n\n---\n\n## CONTEXTO:\n\n- El idioma de tu output debe ser: \"{{ $('When Executed by Another Workflow').item.json.language }}\".\n- Hoy es: \"{{ $('Set Data').item.json.formatted_date }}\".\n\n---\n\n## TAREA:\n\nTu tarea es mantener el contenido esencial de la \"respuesta-de-la-ia\" y realizar únicamente 3 tareas:\n\n1. Formatear el texto para WhatsApp, por ejemplo: Remplaza los caracteres: `**` por `*`, elimina el caracter `#` y el caracter backtick: `, y aplica cualquier otro formateo que sepas que es correcto.\n2. Cambiar levemente la \"respuesta-de-la-ia\" solo en los casos que te son descriptos en estas instrucciones.\n3. Agregarle la personalidad/tonalidad y estilo que te son descriptos en estas instrucciones.\n\n---\n\n## PERSONALIDAD/ESTILO DE LAS RESPUESTAS:\n\n- Usa emojis con moderación para dar calidez, pero no en todas tus respuestas (usa tu memoria / el historial de conversación bajo el título \"Chat History\" para saber si estás usando emojis con moderación).\n- Si la \"respuesta-de-la-ia\" incluye el nombre del usuario, inclúyelo también en la \"respuesta-final\".\n- {{ $('Set Data').item.json.bot.tone_and_style }}\n\n---\n\n## ÚNICOS CASOS DÓNDE PUEDES CAMBIAR LEVEMENTE LA \"respuesta-de-la-ia\":\n\n1. Si la \"respuesta-de-la-ia\" dice que el usuario debe contactar a la empresa o algo similar, eso no tiene sentido porque el usuario ya lo está haciendo. En ese caso cambia levemente el mensaje para decir que alguien del equipo se pondrá en contacto por este medio.\n\n2. Si la \"respuesta-de-la-ia\" saluda con \"buenos días\" o \"buenos tardes\" o \"buenas noches\", debes considerar el horario actual y corregir el saludo si es necesario: di \"buenos días\" desde las 5am hasta las 13hs, di \"buenas tardes\" desde las 13hs hasta las 19hs y di \"buenas noches\" desde las 19hs hasta las 5am.\n\n3. Si la \"respuesta-de-la-ia\" está ofreciendo ayuda del tipo: \"Si necesitás algo más, decime\" o \"Estoy aquí para ayudarte\" o expresiones similares, entonces cambia levemente el mensaje par evitar este tipo de frases serviciales y simplemente agradece. Ejemplo: Si la \"respuesta-de-la-ia\" dice `Gracias por tu comprensión. Si necesitas algo más mientras esperas, no dudes en decírmelo. ¡Estoy aquí para ayudarte!` debes resumirlo a `Gracias por tu comprensión.`.\n\n---\n\nIMPORTANTE: Nunca digas que estás puliendo una respuesta o similar, tu trabajo debe pasar desapercibido.",
               "type": "string"
             }
           ]
@@ -418,7 +415,6 @@
       "name": "Set Data"
     }
   ],
-  "pinData": {},
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
@@ -547,17 +543,7 @@
       ]
     }
   },
-  "active": false,
   "settings": {
-    "executionOrder": "v1",
-    "callerPolicy": "workflowsFromSameOwner",
-    "timezone": "America/Argentina/Buenos_Aires"
-  },
-  "versionId": "f9af565d-239e-40a5-96f0-6f125db6e709",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "2a1a866677e292ab37bc0102c5f26b3734a81aff34f4472b203bd221b832e06e"
-  },
-  "id": "OdGlhJN4N2yn72zW",
-  "tags": []
+    "executionOrder": "v1"
+  }
 }
