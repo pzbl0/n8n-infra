@@ -11,14 +11,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -660,
-        300
+        -656,
+        304
       ],
       "id": "67161cd9-6f47-4cf3-9327-2942859d4764",
       "name": "Push messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -34,14 +34,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -1320,
-        300
+        -1328,
+        304
       ],
       "id": "4eccf886-e2a6-476f-923f-d4c7cec1c863",
       "name": "Get client messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -83,8 +83,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1100,
-        300
+        -1104,
+        304
       ],
       "id": "4ae3002f-46ad-4307-b5c3-077f83e22963",
       "name": "Switch2"
@@ -151,8 +151,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -220,
-        200
+        -224,
+        208
       ],
       "id": "2ca15bbf-a356-4bde-8780-b1e450371df0",
       "name": "Switch"
@@ -165,14 +165,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        220,
-        200
+        224,
+        208
       ],
       "id": "96b18dc5-663a-4f1f-886a-011ea6947f53",
       "name": "Delete client messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -211,8 +211,8 @@
       "name": "Start",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        -1540,
-        300
+        -1536,
+        304
       ]
     },
     {
@@ -226,14 +226,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -440,
-        300
+        -448,
+        304
       ],
       "id": "238d6e03-7248-4c77-9766-d145c4a2094f",
       "name": "Get messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -300,8 +300,8 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        440,
-        200
+        448,
+        208
       ],
       "id": "2aad0e99-4c6f-443c-af7c-f86cfd19efea",
       "name": "Filter 2"
@@ -321,14 +321,14 @@
       "typeVersion": 4.2,
       "position": [
         0,
-        200
+        208
       ],
       "id": "edba7c02-3f4a-4537-8a75-1fa0bbf72088",
       "name": "Delete labels",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "a89hEWXzRSBs7DUC",
-          "name": "Chatwoot - Header Auth account"
+          "id": "nWyAJQsTprwGKxtE",
+          "name": "Chatwoot - Header Auth"
         }
       }
     },
@@ -347,14 +347,14 @@
       "typeVersion": 4.2,
       "position": [
         -880,
-        225
+        240
       ],
       "id": "24c0d8fa-745f-4ce7-8b2f-21056e20c933",
       "name": "Add \"human-pause\" label",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "a89hEWXzRSBs7DUC",
-          "name": "Chatwoot - Header Auth account"
+          "id": "nWyAJQsTprwGKxtE",
+          "name": "Chatwoot - Header Auth"
         }
       }
     },
