@@ -1,5 +1,6 @@
 [
   {
+    "client": "EcoModa",
     "bot": {
       "name": "El Asesor",
       "tone_and_style": "Amigable y profesional, con un toque cálido y cercano",
@@ -25,6 +26,7 @@
     }
   },
   {
+    "client": "TechSol",
     "bot": {
       "name": "Maxi",
       "tone_and_style": "Directo y técnico, con un enfoque en soluciones rápidas",
