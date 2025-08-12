@@ -1,0 +1,269 @@
+{
+  "name": "bot-detector - v2",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -736,
+        544
+      ],
+      "id": "0e802282-a5cb-485d-aceb-ee5ac6b42f3b",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"botDetected\": true,\n\t\"why\": \"porque la conversación se repite vez tras vez\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -832,
+        336
+      ],
+      "id": "4157fe4e-32d8-4bdc-a1b5-7b10ef1d6697",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -960,
+        336
+      ],
+      "id": "28fbd637-423d-453c-b7ae-87b53232ac8b",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9a448f74-d42a-4b4e-aa41-0e90145de908",
+              "leftValue": "={{ $json.output.botDetected }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        112
+      ],
+      "id": "a9f30ce5-1c3e-4a5b-94a4-2edce45d14c1",
+      "name": "If bot"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "userMessage"
+            },
+            {
+              "name": "chatHistory"
+            },
+            {
+              "name": "customInstructionsToDefineItsNotBot"
+            }
+          ]
+        }
+      },
+      "id": "302bc44b-9b38-4e68-a363-7ba92faf3067",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -1184,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "151ce943-81af-48cf-8334-6eb802590571",
+              "leftValue": "={{ $json.output.botDetected }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        16
+      ],
+      "id": "ff6e8002-7548-4d2a-899d-720a83b09edd",
+      "name": "Filter"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        208
+      ],
+      "id": "e1d25548-2224-4706-8ce9-dcfd445204db",
+      "name": "Continue"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Este es el último mensaje del usuario: {{ $('Start').item.json.userMessage }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un agente especializado en detectar si el usuario es un bot. Tu única tarea es analizar un historial de mensajes/interacciones entre un usuario y un bot y determinar si el usuario es también un bot o un humano.\n\nDevuelve únicamente un JSON con el campo \"botDetected\": true si el usuario se trata de un bot, o false si es un humano y el campo \"why\" con la explicación de porque determinaste si es o no un bot.\n\nÚnicos patrones que revelan que el usuario es un bot:\n\n- Repetición exacta de mensajes.\n- El usuario se presenta como un bot, asistente virtual, etc.\n\nPosibles patrones que muestran que el usuario es un humano:\n\n- Mensajes breves.\n- Errores ortográficos.\n- Mensaje editado: aparece el texto \"Edited Message\"\n- El mensaje es solo un emoji\n- {{ $json.customInstructionsToDefineItsNotBot }}\n\nDeterminar que un usuario es un bot es una acción crítica y solo debes tomarla cuando no hay duda alguna.\n\nEjemplo de salida esperada:\n`{\"botDetected\": true, \"why\": \"Porque la conversación se repite vez tras vez.\"}`\n\n---\n\nEste es el historial de interacciones:\n\"{{ $('Start').item.json.chatHistory }}\"\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -944,
+        112
+      ],
+      "id": "8f87912c-8ad6-4800-ac76-a7bcad81c16f",
+      "name": "AI Agent"
+    }
+  ],
+  "connections": {
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If bot": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If bot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
