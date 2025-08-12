@@ -13,6 +13,7 @@ Posibles patrones que muestran que el usuario es un humano:
 - Errores ortográficos.
 - Mensaje editado: aparece el texto "Edited Message"
 - El mensaje es solo un emoji
+- {{ $json.customInstructionsToDefineItsNotBot }}
 
 Determinar que un usuario es un bot es una acción crítica y solo debes tomarla cuando no hay duda alguna.
 
@@ -22,4 +23,4 @@ Ejemplo de salida esperada:
 ---
 
 Este es el historial de interacciones:
-"{{ $('Start').item.json.chat_history }}"
+"{{ $('Start').item.json.chatHistory }}"
