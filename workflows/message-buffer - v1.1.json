@@ -11,14 +11,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -660,
-        125
+        -656,
+        120
       ],
       "id": "e88743fd-fbca-43aa-958d-87436fa73a59",
       "name": "Get messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -34,13 +34,13 @@
       "typeVersion": 1,
       "position": [
         -880,
-        125
+        120
       ],
       "id": "6eb91a4b-a70f-4dfc-a637-589b2e51c93e",
       "name": "Push messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -52,8 +52,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        0,
-        225
+        16,
+        216
       ],
       "id": "0e4da861-a99e-46dd-b102-6e44db60ad65",
       "name": "Wait",
@@ -67,14 +67,14 @@
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        0,
+        16,
         0
       ],
       "id": "afb10027-2fac-4b44-b419-f74620923c59",
       "name": "Delete messages",
       "credentials": {
         "redis": {
-          "id": "AT4Iqbzd8lEoYu8w",
+          "id": "zlVWqKFSgUSVauIh",
           "name": "Redis account"
         }
       }
@@ -96,7 +96,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
+        240,
         0
       ],
       "id": "c890c104-f656-4d40-b48a-4cd8315550b8",
@@ -120,7 +120,8 @@
               "name": "session_timestamp"
             },
             {
-              "name": "time_to_wait"
+              "name": "time_to_wait_in_seconds",
+              "type": "number"
             }
           ]
         }
@@ -128,8 +129,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1320,
-        125
+        -1328,
+        120
       ],
       "id": "01059cef-f5ae-47fc-b051-c2c3d05518d5",
       "name": "When Executed by Another Workflow"
@@ -161,8 +162,8 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        -440,
-        50
+        -432,
+        48
       ],
       "id": "c8449c95-5a3f-4a16-a3c9-9f86f0e7ba8a",
       "name": "Filter"
@@ -205,8 +206,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -220,
-        50
+        -208,
+        48
       ],
       "id": "3ee18d89-4b7a-4f9b-902e-3da9e1e347b4",
       "name": "Switch"
@@ -242,8 +243,8 @@
             {
               "id": "5aec02f3-a020-4df4-a48a-9b2a5271cd1d",
               "name": "flowdata.time_to_wait",
-              "value": "={{ $json.time_to_wait }}",
-              "type": "string"
+              "value": "={{ $json.time_to_wait_in_seconds }}",
+              "type": "number"
             }
           ]
         },
@@ -252,8 +253,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1100,
-        125
+        -1104,
+        120
       ],
       "id": "f795ee55-2cc5-433d-83f9-011d5dfd215c",
       "name": "Set flow data"
