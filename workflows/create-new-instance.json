@@ -1,0 +1,386 @@
+{
+  "name": "create-new-instance",
+  "nodes": [
+    {
+      "parameters": {
+        "instanceName": "={{ $json.instanceName }}",
+        "number": "={{ $json.messageTo }}",
+        "options_Create_instance": {
+          "instanceSettings": {
+            "settings": {
+              "rejectCall": true,
+              "groupsIgnore": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        -192
+      ],
+      "id": "cfbaba82-be80-4d67-8761-51450f1f2050",
+      "name": "Criar instancia",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "instance-connect",
+        "instanceName": "={{ $json.data.instance.instanceName }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -192
+      ],
+      "id": "1c2e24ad-b586-4914-a448-241e6f1529a7",
+      "name": "Conectar instancia",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-image",
+        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
+        "remoteJid": "={{ $('Set data').item.json.messageTo }}",
+        "media": "={{ $json.cleanedBase64 }}",
+        "caption": "={{ $('Set data').item.json.messageCaption }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -192
+      ],
+      "id": "e17c6609-4bc0-4501-834e-5385dfb1a888",
+      "name": "Enviar imagem",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function removeBase64Prefix(base64String) {\n  // Regular expression to detect and remove the data:image/*;base64, prefix\n  const regex = /^data:image\\/[a-zA-Z]+;base64,/;\n  return base64String.replace(regex, '');\n}\n\n// Get the Base64 string from the input of n8n\nconst input = $input.first().json.data.base64; // Adjust 'base64String' to match your input field name\n\n// Process the string and return only the Base64 part\nconst cleanedBase64 = removeBase64Prefix(input);\n\n// Return the result as a new item\nreturn [{ json: { cleanedBase64 } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        -192
+      ],
+      "id": "0469fb2a-0a54-4059-994f-1721ee9481c0",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2979b370-55ff-4080-80f6-baeda28df3f3",
+              "name": "instanceName",
+              "value": "={{ $json.body.instanceName }}",
+              "type": "string"
+            },
+            {
+              "id": "168b7387-cfd7-48a6-8740-821dff3d5c7e",
+              "name": "instanceNumber",
+              "value": "={{ $json.body.instanceNumber }}",
+              "type": "number"
+            },
+            {
+              "id": "c411b1af-a583-4b41-ba0d-e6739214dde2",
+              "name": "messageFromName",
+              "value": "={{ $json.body.messageFromName }}",
+              "type": "string"
+            },
+            {
+              "id": "6bde2de1-58d4-4433-bd86-720067b7d085",
+              "name": "messageTo",
+              "value": "={{ $json.body.messageTo }}",
+              "type": "string"
+            },
+            {
+              "id": "de9539fc-5fb1-4b9d-a376-2c1ed9f11391",
+              "name": "messageCaption",
+              "value": "={{ $json.body.messageCaption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -800,
+        -192
+      ],
+      "id": "e663dedc-d41e-4b10-bd70-8a139e1cd3fc",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "path": "a5f91027-8fd6-44e3-a184-b2563ada6336",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1024,
+        -192
+      ],
+      "id": "70fa7b0d-eef9-4de4-81de-efba250c37a2",
+      "name": "Webhook",
+      "webhookId": "a5f91027-8fd6-44e3-a184-b2563ada6336"
+    },
+    {
+      "parameters": {
+        "url": "https://n8n-pzblo.qn7hmw.easypanel.host/webhook/a5f91027-8fd6-44e3-a184-b2563ada6336",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "instanceName",
+              "value": "={{ $json.nombreCliente }}"
+            },
+            {
+              "name": "instanceNumber",
+              "value": "={{ $json.numeroCliente }}"
+            },
+            {
+              "name": "messageFromName",
+              "value": "pzblo"
+            },
+            {
+              "name": "messageTo",
+              "value": "={{ $json.numeroQR }}"
+            },
+            {
+              "name": "messageCaption",
+              "value": "Tenés 60 segundos ⏳😁"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32,
+        128
+      ],
+      "id": "92d1b971-21bc-448b-8492-3a866aee2ad3",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.flowdata.phone_number }}",
+                    "rightValue": "+554884514735",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a447902e-bcb4-4ce9-a1bd-5fb1fa4fe716"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pablo"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -704,
+        352
+      ],
+      "id": "abafeb30-3173-48f7-940b-ab7bb839cc11",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.flowdata.content }}",
+                    "rightValue": "crear instancia",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "db1c82bb-9651-490e-80a5-26093d2619c2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Create new instance"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -480,
+        208
+      ],
+      "id": "85c17006-f85a-4dad-b603-cede1e0d815c",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the text from the previous node\nconst text = $input.first().json.flowdata.content;\n\n// Use regular expressions to extract the values\nconst nombreClienteMatch = text.match(/Nombre del cliente: (.*)/);\nconst numeroClienteMatch = text.match(/Número del cliente: (\\d+)/);\nconst numeroQRMatch = text.match(/Número donde llegará el QR: (\\d+)/);\n\n// Create the output object\nreturn [{\n  json: {\n    nombreCliente: nombreClienteMatch ? nombreClienteMatch[1].trim() : null,\n    numeroCliente: numeroClienteMatch ? numeroClienteMatch[1].trim() : null,\n    numeroQR: numeroQRMatch ? numeroQRMatch[1].trim() : null\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        128
+      ],
+      "id": "29a845fa-3a27-404e-b3fc-f8bd2d8aa379",
+      "name": "Code1"
+    }
+  ],
+  "connections": {
+    "Criar instancia": {
+      "main": [
+        [
+          {
+            "node": "Conectar instancia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conectar instancia": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Enviar imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "Criar instancia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
