@@ -1,5 +1,0 @@
-Crear instancia:
-
-Nombre del cliente: ejemplo-de-nombre
-Número del cliente: 5548984514735
-Número donde llegará el QR: 5548991989819
