@@ -3,86 +3,13 @@
   "nodes": [
     {
       "parameters": {
-        "instanceName": "={{ $json.instanceName }}",
-        "number": "={{ $json.messageTo }}",
-        "options_Create_instance": {
-          "instanceSettings": {
-            "settings": {
-              "rejectCall": true,
-              "groupsIgnore": true
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        -576,
-        -192
-      ],
-      "id": "cfbaba82-be80-4d67-8761-51450f1f2050",
-      "name": "Criar instancia",
-      "credentials": {
-        "evolutionApi": {
-          "id": "hRSaxIv9HBpdBse1",
-          "name": "Evolution account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "instance-connect",
-        "instanceName": "={{ $json.data.instance.instanceName }}"
-      },
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        -352,
-        -192
-      ],
-      "id": "1c2e24ad-b586-4914-a448-241e6f1529a7",
-      "name": "Conectar instancia",
-      "credentials": {
-        "evolutionApi": {
-          "id": "hRSaxIv9HBpdBse1",
-          "name": "Evolution account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "messages-api",
-        "operation": "send-image",
-        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
-        "remoteJid": "={{ $('Set data').item.json.messageTo }}",
-        "media": "={{ $json.cleanedBase64 }}",
-        "caption": "={{ $('Set data').item.json.messageCaption }}",
-        "options_message": {}
-      },
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        96,
-        -192
-      ],
-      "id": "e17c6609-4bc0-4501-834e-5385dfb1a888",
-      "name": "Enviar imagem",
-      "credentials": {
-        "evolutionApi": {
-          "id": "hRSaxIv9HBpdBse1",
-          "name": "Evolution account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "jsCode": "function removeBase64Prefix(base64String) {\n  // Regular expression to detect and remove the data:image/*;base64, prefix\n  const regex = /^data:image\\/[a-zA-Z]+;base64,/;\n  return base64String.replace(regex, '');\n}\n\n// Get the Base64 string from the input of n8n\nconst input = $input.first().json.data.base64; // Adjust 'base64String' to match your input field name\n\n// Process the string and return only the Base64 part\nconst cleanedBase64 = removeBase64Prefix(input);\n\n// Return the result as a new item\nreturn [{ json: { cleanedBase64 } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -128,
-        -192
+        -336
       ],
       "id": "0469fb2a-0a54-4059-994f-1721ee9481c0",
       "name": "Code"
@@ -101,7 +28,7 @@
               "id": "168b7387-cfd7-48a6-8740-821dff3d5c7e",
               "name": "instanceNumber",
               "value": "={{ $json.body.instanceNumber }}",
-              "type": "number"
+              "type": "string"
             },
             {
               "id": "c411b1af-a583-4b41-ba0d-e6739214dde2",
@@ -111,8 +38,14 @@
             },
             {
               "id": "6bde2de1-58d4-4433-bd86-720067b7d085",
-              "name": "messageTo",
-              "value": "={{ $json.body.messageTo }}",
+              "name": "numberToSendQR",
+              "value": "={{ $json.body.numberToSendQR }}",
+              "type": "string"
+            },
+            {
+              "id": "d4e0a2f5-c19e-412f-9118-b5a0e72c1cb5",
+              "name": "numberToSendInfo",
+              "value": "={{ $json.body.numberToSendInfo }}",
               "type": "string"
             },
             {
@@ -129,7 +62,7 @@
       "typeVersion": 3.4,
       "position": [
         -800,
-        -192
+        -336
       ],
       "id": "e663dedc-d41e-4b10-bd70-8a139e1cd3fc",
       "name": "Set data"
@@ -143,7 +76,7 @@
       "typeVersion": 2,
       "position": [
         -1024,
-        -192
+        -336
       ],
       "id": "70fa7b0d-eef9-4de4-81de-efba250c37a2",
       "name": "Webhook",
@@ -151,172 +84,264 @@
     },
     {
       "parameters": {
-        "url": "https://n8n-pzblo.qn7hmw.easypanel.host/webhook/a5f91027-8fd6-44e3-a184-b2563ada6336",
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "instanceName",
-              "value": "={{ $json.nombreCliente }}"
-            },
-            {
-              "name": "instanceNumber",
-              "value": "={{ $json.numeroCliente }}"
-            },
-            {
-              "name": "messageFromName",
-              "value": "pzblo"
-            },
-            {
-              "name": "messageTo",
-              "value": "={{ $json.numeroQR }}"
-            },
-            {
-              "name": "messageCaption",
-              "value": "Tenés 60 segundos ⏳😁"
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        -336
+      ],
+      "id": "8e5eb70c-44b8-4fe9-a5c3-da765b1770e1",
+      "name": "Wait",
+      "webhookId": "4ca0c43b-ba5c-4952-8ef2-ebf77b090758"
+    },
+    {
+      "parameters": {
+        "instanceName": "={{ $json.instanceName }}",
+        "number": "={{ $json.instanceNumber }}",
+        "options_Create_instance": {
+          "instanceSettings": {
+            "settings": {
+              "rejectCall": true,
+              "groupsIgnore": true
             }
-          ]
+          }
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        -336
+      ],
+      "id": "cfbaba82-be80-4d67-8761-51450f1f2050",
+      "name": "Create instance",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "instance-connect",
+        "instanceName": "={{ $json.data.instance.instanceName }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -336
+      ],
+      "id": "1c2e24ad-b586-4914-a448-241e6f1529a7",
+      "name": "Connect to instance",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-image",
+        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
+        "remoteJid": "={{ $('Set data').item.json.numberToSendQR }}",
+        "media": "={{ $json.cleanedBase64 }}",
+        "caption": "={{ $('Set data').item.json.messageCaption }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -336
+      ],
+      "id": "e17c6609-4bc0-4501-834e-5385dfb1a888",
+      "name": "Send QR",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
+        "remoteJid": "={{ $('Set data').item.json.numberToSendInfo }}",
+        "messageText": "El código QR fue correctamente enviado al cliente ✅",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -336
+      ],
+      "id": "1550df97-f16e-41a2-8b79-79f984c3ac0c",
+      "name": "Send QR confirmation message",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "fetch-instances",
+        "instanceName": "={{ $('Set data').item.json.instanceName }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -336
+      ],
+      "id": "e7962f34-4767-4e1c-beb0-eb0c7df4c5b0",
+      "name": "Check instance",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b7d1b739-6463-454c-adfc-92e4572c18e1",
+              "leftValue": "={{ $json.data[0].connectionStatus }}",
+              "rightValue": "open",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        -32,
-        128
+        992,
+        -336
       ],
-      "id": "92d1b971-21bc-448b-8492-3a866aee2ad3",
-      "name": "HTTP Request"
+      "id": "6fa03421-8c32-4bc9-b90b-7a87af7fce62",
+      "name": "If connected"
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.flowdata.phone_number }}",
-                    "rightValue": "+554884514735",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "a447902e-bcb4-4ce9-a1bd-5fb1fa4fe716"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "pablo"
-            }
-          ]
-        },
-        "options": {
-          "fallbackOutput": "extra"
+        "operation": "delete-instance",
+        "instanceName": "={{ $('Set data').item.json.instanceName }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -240
+      ],
+      "id": "98798b4e-82b5-4968-9ca4-1a30c3cbcc4b",
+      "name": "Delete instance",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
         }
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        -704,
-        352
-      ],
-      "id": "abafeb30-3173-48f7-940b-ab7bb839cc11",
-      "name": "Switch1"
+      }
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.flowdata.content }}",
-                    "rightValue": "crear instancia",
-                    "operator": {
-                      "type": "string",
-                      "operation": "contains"
-                    },
-                    "id": "db1c82bb-9651-490e-80a5-26093d2619c2"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Create new instance"
-            }
-          ]
-        },
-        "options": {
-          "fallbackOutput": "extra",
-          "ignoreCase": true
+        "resource": "messages-api",
+        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
+        "remoteJid": "={{ $('Set data').item.json.numberToSendInfo }}",
+        "messageText": "=El WhatsApp no pudo ser conectado ❌, vuelve a intentar.",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -240
+      ],
+      "id": "9b9fd141-e583-4c02-af5d-fd5973eb3c3c",
+      "name": "Send message",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
         }
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        -480,
-        208
-      ],
-      "id": "85c17006-f85a-4dad-b603-cede1e0d815c",
-      "name": "Switch2"
+      }
     },
     {
       "parameters": {
-        "jsCode": "// Get the text from the previous node\nconst text = $input.first().json.flowdata.content;\n\n// Use regular expressions to extract the values\nconst nombreClienteMatch = text.match(/Nombre del cliente: (.*)/);\nconst numeroClienteMatch = text.match(/Número del cliente: (\\d+)/);\nconst numeroQRMatch = text.match(/Número donde llegará el QR: (\\d+)/);\n\n// Create the output object\nreturn [{\n  json: {\n    nombreCliente: nombreClienteMatch ? nombreClienteMatch[1].trim() : null,\n    numeroCliente: numeroClienteMatch ? numeroClienteMatch[1].trim() : null,\n    numeroQR: numeroQRMatch ? numeroQRMatch[1].trim() : null\n  }\n}];"
+        "resource": "messages-api",
+        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
+        "remoteJid": "={{ $('Set data').item.json.instanceNumber }}",
+        "messageText": "El WhatsApp fue conectado correctamente ✅",
+        "options_message": {}
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
       "position": [
-        -256,
-        128
+        1216,
+        -432
       ],
-      "id": "29a845fa-3a27-404e-b3fc-f8bd2d8aa379",
-      "name": "Code1"
+      "id": "4719abef-faa1-4dfc-b60e-2cb051a07a8c",
+      "name": "Send QR connected to client",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('Set data').item.json.messageFromName }}",
+        "remoteJid": "={{ $('Set data').item.json.numberToSendInfo }}",
+        "messageText": "El WhatsApp fue conectado correctamente ✅",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -432
+      ],
+      "id": "178eb127-31c8-4fdd-9c88-526717f86ffb",
+      "name": "Send QR connected to manager",
+      "credentials": {
+        "evolutionApi": {
+          "id": "hRSaxIv9HBpdBse1",
+          "name": "Evolution account"
+        }
+      }
     }
   ],
   "connections": {
-    "Criar instancia": {
-      "main": [
-        [
-          {
-            "node": "Conectar instancia",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Conectar instancia": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Code": {
       "main": [
         [
           {
-            "node": "Enviar imagem",
+            "node": "Send QR",
             "type": "main",
             "index": 0
           }
@@ -327,7 +352,7 @@
       "main": [
         [
           {
-            "node": "Criar instancia",
+            "node": "Create instance",
             "type": "main",
             "index": 0
           }
@@ -345,33 +370,106 @@
         ]
       ]
     },
-    "Switch1": {
+    "Wait": {
       "main": [
         [
           {
-            "node": "Switch2",
+            "node": "Check instance",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Switch2": {
+    "Create instance": {
       "main": [
         [
           {
-            "node": "Code1",
+            "node": "Connect to instance",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code1": {
+    "Connect to instance": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send QR": {
+      "main": [
+        [
+          {
+            "node": "Send QR confirmation message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send QR confirmation message": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check instance": {
+      "main": [
+        [
+          {
+            "node": "If connected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If connected": {
+      "main": [
+        [
+          {
+            "node": "Send QR connected to client",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete instance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete instance": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send QR connected to client": {
+      "main": [
+        [
+          {
+            "node": "Send QR connected to manager",
             "type": "main",
             "index": 0
           }
@@ -379,7 +477,6 @@
       ]
     }
   },
-  "active": true,
   "settings": {
     "executionOrder": "v1"
   }
