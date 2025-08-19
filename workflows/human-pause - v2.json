@@ -1,0 +1,586 @@
+{
+  "name": "human-pause - v2",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.accountId }}_{{ $('Set data').item.json.conversationId }}_human_pause",
+        "messageData": "={{ JSON.stringify($('Set data').item.json.dataToPush) }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        288
+      ],
+      "id": "388883c5-f8d9-4add-bab8-431f17241466",
+      "name": "Push messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "list_array",
+        "key": "={{ $json.projectName }}_{{ $json.accountId }}_{{ $json.conversationId }}_human_pause",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        288
+      ],
+      "id": "14fbdd4e-03a1-4d7b-8175-880e0b191313",
+      "name": "Get client messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dd956404-ede3-43a3-b61f-b696d7b32f41",
+                    "leftValue": "={{ $json.list_array.length }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "First cycle"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -864,
+        288
+      ],
+      "id": "efecf6b5-56f6-4448-84b4-eea095773011",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8e0cce2e-5c91-40ab-b822-90660ff75aed",
+                    "leftValue": "={{ JSON.parse($json.list_array.first()).messageId }}",
+                    "rightValue": "={{ $('Set data').item.json.dataToPush.messageId }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Do nothing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dc6b80d6-7348-4b22-b518-d84f899c6e6f",
+                    "leftValue": "={{ JSON.parse($json.list_array.last()).createdAt }}",
+                    "rightValue": "={{ $now.minus($('Set data').item.json.humanPauseDurationInMinuts, 'minutes') }}",
+                    "operator": {
+                      "type": "dateTime",
+                      "operation": "before"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Continue"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Wait"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        32,
+        176
+      ],
+      "id": "5a114195-ccc6-4241-8e61-b123468bd959",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.accountId }}_{{ $('Set data').item.json.conversationId }}_human_pause"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        480,
+        192
+      ],
+      "id": "42b0666d-5460-480b-bca9-4269695bd788",
+      "name": "Delete client messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "projectName"
+            },
+            {
+              "name": "chatwootUrl"
+            },
+            {
+              "name": "accountId",
+              "type": "number"
+            },
+            {
+              "name": "conversationId",
+              "type": "number"
+            },
+            {
+              "name": "messageId",
+              "type": "number"
+            },
+            {
+              "name": "createdAt"
+            },
+            {
+              "name": "humanPauseDurationInMinuts",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "dbbea262-49bb-43a6-ac35-2ba06815ff86",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -1536,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "list_array",
+        "key": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.accountId }}_{{ $('Set data').item.json.conversationId }}_human_pause",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        288
+      ],
+      "id": "69de57e3-5899-4d02-8164-9d28fd5984a9",
+      "name": "Get messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ace2d184-3bc9-40b5-91df-c96b84275149",
+              "leftValue": "filter",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "1e154044-2c88-44fb-8ef8-386c010e8a01",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ace2d184-3bc9-40b5-91df-c96b84275149",
+              "leftValue": "filter",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        192
+      ],
+      "id": "ef3deec8-63d7-4d48-81cb-dc22d987467e",
+      "name": "Filter 2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set data').item.json.chatwootUrl }}/api/v1/accounts/{{ $('Set data').item.json.accountId }}/conversations/{{ $('Set data').item.json.conversationId }}/labels/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"labels\": [\"\"]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        256,
+        192
+      ],
+      "id": "547401fd-0adb-4b44-af75-7dbabbcc9d2f",
+      "name": "Delete labels",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nWyAJQsTprwGKxtE",
+          "name": "Chatwoot - Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set data').item.json.chatwootUrl }}/api/v1/accounts/{{ $('Set data').item.json.accountId }}/conversations/{{ $('Set data').item.json.conversationId }}/labels/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"labels\": [\"human-pause\"]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -640,
+        216
+      ],
+      "id": "df51fe3c-861c-457f-9952-1635aaf22893",
+      "name": "Add \"human-pause\" label",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nWyAJQsTprwGKxtE",
+          "name": "Chatwoot - Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": "={{ $('Set data').item.json.humanPauseDurationInMinuts / 3}}",
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        256,
+        384
+      ],
+      "id": "5dd484fe-89f0-49a0-b171-61915a6b6df3",
+      "name": "Wait",
+      "webhookId": "33585dbe-64f4-411e-bfd9-f4aeada97aba"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca125b8b-3299-41c1-87ce-27750887eb64",
+              "name": "projectName",
+              "value": "={{ $json.projectName }}",
+              "type": "string"
+            },
+            {
+              "id": "1e929bd3-ea86-4af6-99cb-cb659f541ff2",
+              "name": "chatwootUrl",
+              "value": "={{ $json.chatwootUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "63ce35fc-b0e7-45e1-b609-b350948459c4",
+              "name": "accountId",
+              "value": "={{ $json.accountId }}",
+              "type": "number"
+            },
+            {
+              "id": "b77842a8-4df5-4e4e-a82c-16e771e284f5",
+              "name": "conversationId",
+              "value": "={{ $json.conversationId }}",
+              "type": "number"
+            },
+            {
+              "id": "87f6994f-6118-4e97-babb-c44464db8689",
+              "name": "humanPauseDurationInMinuts",
+              "value": "={{ $json.humanPauseDurationInMinuts }}",
+              "type": "number"
+            },
+            {
+              "id": "0ec87cbd-0c88-4db0-b4b8-9549e3e82c18",
+              "name": "dataToPush.messageId",
+              "value": "={{ $json.messageId }}",
+              "type": "number"
+            },
+            {
+              "id": "8b045d13-ebcc-4e78-8bcb-4079e744e10e",
+              "name": "dataToPush.createdAt",
+              "value": "={{ $json.createdAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1312,
+        288
+      ],
+      "id": "a952655e-6a4c-479c-8d63-15024419b22d",
+      "name": "Set data"
+    }
+  ],
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete labels",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push messages": {
+      "main": [
+        [
+          {
+            "node": "Get messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get client messages": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Add \"human-pause\" label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Push messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete client messages": {
+      "main": [
+        [
+          {
+            "node": "Filter 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get messages": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete labels": {
+      "main": [
+        [
+          {
+            "node": "Delete client messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add \"human-pause\" label": {
+      "main": [
+        [
+          {
+            "node": "Push messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "Get client messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
