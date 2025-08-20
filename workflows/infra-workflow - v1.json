@@ -244,10 +244,10 @@
           "mappingMode": "defineBelow",
           "value": {
             "message_id": "={{ $('Set data').item.json.messageId }}",
-            "session_id": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.accountId }}_{{ $('Set data').item.json.sessionId }}_buffer",
+            "session_id": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.accountId }}_{{ $('Set data').item.json.conversationId }}_buffer",
             "session_input": "={{ $json.text }}",
             "session_timestamp": "={{ $('Set data').item.json.createdAt }}",
-            "time_to_wait_in_seconds": 5
+            "time_to_wait_in_seconds": "={{ $('Set data').item.json.bufferTimeToWaitInSeconds }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -309,7 +309,7 @@
       "typeVersion": 1.2,
       "position": [
         2272,
-        16
+        8
       ],
       "id": "b9ca83ed-e998-449e-adf7-a4dc51bf7cb5",
       "name": "message-buffer"
@@ -371,7 +371,7 @@
       "typeVersion": 1.2,
       "position": [
         2048,
-        16
+        8
       ],
       "id": "981eeefc-7b2d-49a8-9c6d-b21d772c070e",
       "name": "transcribe-media"
@@ -637,7 +637,7 @@
       "typeVersion": 1.2,
       "position": [
         4736,
-        16
+        8
       ],
       "id": "0ff91e64-795a-4213-b14a-c4780297cc36",
       "name": "build-system-message"
@@ -862,7 +862,7 @@
       "typeVersion": 3.4,
       "position": [
         4960,
-        16
+        8
       ],
       "id": "5c011ab1-ad77-47b8-b7e5-ef1baae57362",
       "name": "Return"
@@ -896,7 +896,7 @@
       "typeVersion": 2.2,
       "position": [
         704,
-        16
+        8
       ],
       "id": "d4dcec7c-63dd-4951-95b3-4faa7d856d7c",
       "name": "If filter admin"
@@ -930,7 +930,7 @@
       "typeVersion": 2.2,
       "position": [
         1152,
-        16
+        8
       ],
       "id": "5783659c-441a-4424-aeb0-f4fd7b184692",
       "name": "If filter all except admin"
@@ -964,7 +964,7 @@
       "typeVersion": 2.2,
       "position": [
         1600,
-        16
+        8
       ],
       "id": "f9ae75f6-0137-485e-a88a-4b0c3930eeb1",
       "name": "If firewall"
@@ -979,7 +979,7 @@
       "typeVersion": 2,
       "position": [
         256,
-        16
+        8
       ],
       "id": "932160c2-17f9-4040-8cf1-c20f3bd2ee85",
       "name": "Webhook",
@@ -1141,7 +1141,7 @@
       "typeVersion": 3.4,
       "position": [
         480,
-        16
+        8
       ],
       "id": "85c223f1-19d7-4dc4-944a-b0a7758c0c6e",
       "name": "Set data"
@@ -1175,7 +1175,7 @@
       "typeVersion": 2.2,
       "position": [
         2496,
-        16
+        8
       ],
       "id": "40353acc-6b3e-4132-a1fb-210a1b0938fc",
       "name": "If get memory"
@@ -1209,7 +1209,7 @@
       "typeVersion": 2.2,
       "position": [
         2944,
-        16
+        8
       ],
       "id": "0b9f6508-37af-478e-8285-a283153b9f87",
       "name": "If bot detector"
@@ -1243,7 +1243,7 @@
       "typeVersion": 2.2,
       "position": [
         3392,
-        16
+        8
       ],
       "id": "f3120d35-463d-428e-8d66-21124dd3540b",
       "name": "If language detector"
@@ -1277,7 +1277,7 @@
       "typeVersion": 2.2,
       "position": [
         3840,
-        16
+        8
       ],
       "id": "9c100fa9-a8c8-47b6-9ffa-0d3bf7333456",
       "name": "If lead reactivation"
@@ -1311,7 +1311,7 @@
       "typeVersion": 2.2,
       "position": [
         4288,
-        16
+        8
       ],
       "id": "16c3d109-ca0c-419a-88b2-915f234492b1",
       "name": "If intention analizer"
