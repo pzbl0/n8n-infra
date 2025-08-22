@@ -1,0 +1,467 @@
+{
+  "name": "main-agent-assistant - v1",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "projectName"
+            },
+            {
+              "name": "clientId",
+              "type": "number"
+            },
+            {
+              "name": "clientPhoneNumber",
+              "type": "number"
+            },
+            {
+              "name": "systemPromptCompanyAdvisorAgent"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "cdb6105b-e8f5-4bf3-8e35-3ab9535426de",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=## TAREA:\n\n- Eres el asistente de un Agente de IA con las siguientes habilidades:\n\n1. Brindar información de la empresa.\n2. Gestionar agendamientos\n\nTu tarea es recibir una query del agente princiapal y dependiendo de la query usar tus herramientas para retornar una respuesta apropiada.\n\n---\n\n## INSTRUCCIONES:\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Necesito la siguiente información de la empresa:`** usa la herramienta `company-info` para brindar la información correcta.\n\n---\n\n- Si la herramienta `scheduling-manager` te retorna una respuesta similar a la siguiente: \"Necesito saber cual de estos eventos modificar\", debes considerar el Prompt (User Message) para ver si la respuesta está ahí. Si lo está vuelve a usar esta herramienta con el ID del evento correspondiente.\n\nEjemplo:\n\n1. La herramienta te retorna: \"Necesito saber cual de estos eventos modificar:\\n\\n[{\"calendarId\":\"ejemplo@ejemplo.com\",\"eventId\":\"xxxxxxxxxx\",\"dateTime\":\"2025-08-21T12:00:00-03:00\",\"summary\":\"Nombre de ejemplo - Titulo de ejemplo\"},{\"calendarId\":\"ejemplo2@ejemplo2.com\",\"eventId\":\"yyyyyyyyyy\",\"dateTime\":\"2025-08-21T13:00:00-03:00\",\"summary\":\"Nombre de ejemplo2 - Titulo de ejemplo2\"}]\"\n2. El Prompt (User Message) dice \"Modificar evento de hoy a las 12:00 PM\". Por lo tanto sabes que el evento que tienes que modificar es el que tiene el ID \"xxxxxxxxxx\" del calendario \"ejemplo@ejemplo.com\" porque es el que tiene el horario de las 12pm.\n3. Usa nuevamente la herramienta `scheduling-manager` pero ahora especificando el eventId y el calendarId.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6a50c1e8-78ca-4478-b493-24c23fb4142f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        224
+      ],
+      "id": "14d8bff6-5e83-4c32-bf53-b60071e7f004",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        224
+      ],
+      "id": "63b96626-f060-4d1d-ba51-162314f94b24",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a698fdbb-53a2-4798-92ee-ad9c8f1fbac1",
+              "name": "query",
+              "value": "={{ $('When Executed by Another Workflow').item.json.query }}",
+              "type": "string"
+            },
+            {
+              "id": "47276cb1-efc5-47d7-bef4-7c26b080af7f",
+              "name": "projectName",
+              "value": "={{ $('When Executed by Another Workflow').item.json.projectName }}",
+              "type": "string"
+            },
+            {
+              "id": "08459aab-99ba-4e89-a89e-64d57281c410",
+              "name": "clientId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.clientId }}",
+              "type": "string"
+            },
+            {
+              "id": "57f6a104-06bf-401d-af09-16cc078d1bad",
+              "name": "clientPhoneNumber",
+              "value": "={{ $('When Executed by Another Workflow').item.json.clientPhoneNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "cdb3a8ad-7a1d-4f0b-9535-6442cd587008",
+              "name": "systemPromptCompanyAdvisorAgent",
+              "value": "={{ $json.systemPromptCompanyAdvisorAgent }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        32,
+        0
+      ],
+      "id": "550d2d93-72a2-40d0-a104-1cf3f0753b66",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        432
+      ],
+      "id": "d50afe39-06ed-4167-9603-05e018eb9c6a",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        432
+      ],
+      "id": "b265ed38-08cb-4997-a0a6-1e97634d0edb",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Usa la herramienta `company-info` cuando para responder la consulta del cliente necesitas la siguiente información: Medios de contacto, redes sociales, ubicación, horarios de atención, medios de pago, alias para transferencia, descuentos o políticas de reserva, cómo se realizan los envíos, sus costos o tiempos de entrega, los cambios, devoluciones o garantías.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "={{ $('Set data').item.json.systemPromptCompanyAdvisorAgent }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        224
+      ],
+      "id": "c795f0d1-ff7b-41a1-b4f7-6b0b2cbef6cd",
+      "name": "company-info"
+    },
+    {
+      "parameters": {
+        "description": "=REGLAS:\n\n- La duración de las reuniones es de 1 hora.\n- Aunque te falte información siempre usa la herramienta `scheduling-manager`, usa la información con la que dispones, no preguntes por más.\n- El ID del calendario de Sofi es \"064b032f400a38dccbdae1ab11d8091e2fcd6cbb2bccfe969e1cd593681b486b@group.calendar.google.com\".\n- El ID del calendario de Pzblo es \"688b6e729b7f5cf3f5ba66d058ac4b96ddf520350cc201c762696e38fb55839f@group.calendar.google.com\".\n\n---\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Averiguar disponibilidad`** usa la herramienta `scheduling-manager` generando los valores de sus campos de esta manera:\n\n`operationType`: \"get-availability\".\n`calendarId`: \"\" (Indicar el ID del calendario dependiendo de con quien quiere agendar, si no fue especificado usa el de Pzblo).\n`eventId`: \"\" (string vacío).\n`eventStart`: \"\" (Indicar la fecha/hora de inicio en formato completo ISO 8601 con zona horaria).\n`eventEnd`: \"\" (Indicar la fecha/hora de finalización en formato completo ISO 8601 con zona horaria).\n`eventName`: \"\" (string vacío).\n`clientName`: \"\" (string vacío).\n\n---\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Averiguar turnos agendados`** usa la herramienta `scheduling-manager` generando los valores de sus campos de esta manera:\n\n`operationType`: \"get-events\".\n`calendarId`: \"\" (string vacío).\n`eventId`: \"\" (string vacío).\n`eventStart`: \"\" (string vacío).\n`eventEnd`: \"\" (string vacío).\n`eventName`: \"\" (string vacío).\n`clientName`: \"\" (string vacío).\n\n---\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Crear un evento`**:\n\n1. Debes saber con quien quiere agendar el usuario, puede ser con alguien del equipo de sinapzia o puede ser directamente con pzblo.\n\n2. Usa la herramienta `scheduling-manager` generando los valores de sus campos de esta manera:\n\n`operationType`: \"create-event\".\n`calendarId`: \"\" (Indicar el ID del calendario dependiendo de con quien quiere agendar, si no fue especificado usa el de Pzblo\").\n`eventId`: \"\" (string vacío).\n`eventStart`: \"\" (Indicar la fecha/hora de inicio en formato completo ISO 8601 con zona horaria).\n`eventEnd`: \"\" (Indicar la fecha/hora de finalización en formato completo ISO 8601 con zona horaria).\n`eventName`: \"\" (Indicar el objetivo/titulo de este evento).\n`clientName`: \"\" (usa el nombre del cliente).\n\n---\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Cancelar evento`** usa la herramienta `scheduling-manager` generando los valores de sus campos de esta manera:\n\n`operationType`: \"delete-event\".\n`calendarId`: \"\" (string vacío).\n`eventId`: \"\" (string vacío).\n`eventStart`: \"\" (string vacío).\n`eventEnd`: \"\" (string vacío).\n`eventName`: \"\" (string vacío).\n`clientName`: \"\" (string vacío).\n\n---\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Modificar evento`** usa la herramienta `scheduling-manager` generando los valores de sus campos de esta manera:\n\n`operationType`: \"update-event\".\n`calendarId`: \"\" (string vacío o el ID del calendario si lo sabes).\n`eventId`: \"\" (string vacío o el ID del evento si lo sabes, no es obligatorio).\n`eventStart`: \"\" (string vacío o si el cambio es de fecha/hora indicar la nueva fecha/hora de inicio en formato completo ISO 8601 con zona horaria).\n`eventEnd`: \"\" (string vacío o si el cambio es de fecha/hora indicar la nueva fecha/hora de finalización en formato completo ISO 8601 con zona horaria, el cual sería 1 hora después de `eventStart`).\n`eventName`: \"\" (string vacío).\n`clientName`: \"\" (string vacío).\n\n---\n\n- **SI LA QUERY COMIENZA CON LA FRASE `Modificar agenda del evento`** usa la herramienta `scheduling-manager` de esta manera:\n\n1. `operationType`: \"get-events\", para obtener los eventos agendados.\n2. `operationType`: \"delete-event\", para eliminar el evento de la agenda en la que estaba.\n3. `operationType`: \"create-event\", para crear el evento en la nueva agenda.\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "j38DjGUQ76h40VEg",
+          "mode": "list",
+          "cachedResultName": "calendar-operations - v2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "clientId": "={{ $('Set data').item.json.clientId }}",
+            "clientName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('clientName', ``, 'string') }}",
+            "dbTableName": "={{ $('Set data').item.json.projectName }}_agenda",
+            "operationType": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('operationType', `Las únicas 5 opciones posibles son:\n1. create-event\n2. delete-event\n3. get-events\n4. get-availability\n5. update-event`, 'string') }}",
+            "eventName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventName', ``, 'string') }}",
+            "eventEnd": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventEnd', ``, 'string') }}",
+            "eventStart": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventStart', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "calendarId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('calendarId', ``, 'string') }}",
+            "clientPhoneNumber": "={{ $('Set data').item.json.clientPhoneNumber }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operationType",
+              "displayName": "operationType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "dbTableName",
+              "displayName": "dbTableName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "calendarId",
+              "displayName": "calendarId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "eventId",
+              "displayName": "eventId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "eventStart",
+              "displayName": "eventStart",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "eventEnd",
+              "displayName": "eventEnd",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "eventName",
+              "displayName": "eventName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "clientId",
+              "displayName": "clientId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "clientPhoneNumber",
+              "displayName": "clientPhoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "clientName",
+              "displayName": "clientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        224
+      ],
+      "id": "f5ad0731-49ac-46da-92d1-c3b00fb109f6",
+      "name": "scheduling-manager"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.clientId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        512,
+        224
+      ],
+      "id": "d6df1fe7-86d2-4a9d-9e06-6e0a34b8c8d0",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "company-info",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "company-info",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "company-info": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "scheduling-manager": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
