@@ -3,12 +3,12 @@ services:
     image: n8nio/n8n
     restart: always
     ports:
-      - "5678:5678"
+      - "5678:5678"  # Editor UI exposed on port 5678
     environment:
-      - N8N_HOST=DOMINIO.COM
+      - N8N_HOST=${N8N_HOST}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
-      - N8N_EXECUTIONS_PROCESS=queue
+      - N8N_EXECUTIONS_PROCESS=main  # Only runs the editor
       - N8N_QUEUE_REDIS_URL=redis://redis:6379
       - N8N_DB_TYPE=postgresdb
       - N8N_DB_POSTGRES_HOST=postgres
@@ -39,6 +39,42 @@ services:
     networks:
       - n8n-network
 
+  n8n-webhook:
+    image: n8nio/n8n
+    restart: always
+    ports:
+      - "5679:5678"  # Webhook service on a different port (e.g., 5679)
+    environment:
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_EXECUTIONS_PROCESS=queue
+      - N8N_QUEUE_REDIS_URL=redis://redis:6379
+      - N8N_DB_TYPE=postgresdb
+      - N8N_DB_POSTGRES_HOST=postgres
+      - N8N_DB_POSTGRES_PORT=5432
+      - N8N_DB_POSTGRES_DATABASE=${N8N_DB_POSTGRES_DATABASE}
+      - N8N_DB_POSTGRES_USER=${N8N_DB_POSTGRES_USER}
+      - N8N_DB_POSTGRES_PASSWORD=${N8N_DB_POSTGRES_PASSWORD}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - GENERIC_TIMEZONE=${TZ}
+      - TZ=${TZ}
+      - NODE_ENV=production
+      - N8N_RUNNERS_ENABLED=true
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=90
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=all
+      - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=all
+      - EXECUTIONS_TIMEOUT=300
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - n8n-network
 
   n8n-worker:
     image: n8nio/n8n
@@ -72,7 +108,6 @@ services:
       - n8n-network
     deploy:
       replicas: ${N8N_WORKER_REPLICAS:-2}
-
 
   redis:
     image: redis:latest
