@@ -44,5 +44,6 @@ Tu tarea es mantener el contenido esencial de la "respuesta-de-la-ia" y realizar
 
 ## NOTAS IMPORTANTES:
 
-- Nunca le digas al usuario que puliste una respuesta, que la mejoraste, ni nada similar, solo retorna la "respuesta-final" sin aclarar que hiciste algún cambio.
 - Nunca le digas al usuario que se ponga en contacto con el equipo, ya lo está haciendo.
+
+- Nunca en tu respuesta debe haber expresiones similares a "aquí tienes la versión final pulida" o "aquí tienes la versión mejorada", o expresiones similares, solo retorna la "respuesta-final" sin aclarar que hiciste algún cambio.

@@ -1,0 +1,1536 @@
+{
+  "name": "calendar-operations - v2.1",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "operationType"
+            },
+            {
+              "name": "dbTableName"
+            },
+            {
+              "name": "calendarId"
+            },
+            {
+              "name": "eventId"
+            },
+            {
+              "name": "eventStart"
+            },
+            {
+              "name": "eventEnd"
+            },
+            {
+              "name": "eventName"
+            },
+            {
+              "name": "clientId",
+              "type": "number"
+            },
+            {
+              "name": "clientPhoneNumber"
+            },
+            {
+              "name": "clientName"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        -248
+      ],
+      "id": "b03baf6c-2246-4323-86c2-d76cf62feab8",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4a900070-1360-4115-a464-965af9ff6800",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        -832
+      ],
+      "id": "4d6b9415-6c69-4a03-a111-d437847ae895",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.operationType }}",
+                    "rightValue": "create-event",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc3baad0-0f98-4b30-8965-8244d4af86d1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "420e3872-61f6-44ed-9b37-94003b3fb728",
+                    "leftValue": "={{ $json.operationType }}",
+                    "rightValue": "delete-event",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Delete"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a5250dde-07d4-42be-83aa-c6fdb5dc99e4",
+                    "leftValue": "={{ $json.operationType }}",
+                    "rightValue": "get-events",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Get events"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0709d35f-6ef4-40c6-aa6d-973832e2f441",
+                    "leftValue": "={{ $json.operationType }}",
+                    "rightValue": "get-availability",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Get availability"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "39b79c65-484e-4fcd-b538-f3869bd55884",
+                    "leftValue": "={{ $json.operationType }}",
+                    "rightValue": "update-event",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Update event"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        -296
+      ],
+      "id": "5343975a-e6e6-44b7-af2d-3da1b1e8c86c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ed711df9-668f-411c-bd39-e2c7849f7fe8",
+              "name": "operationType",
+              "value": "={{ $json.operationType }}",
+              "type": "string"
+            },
+            {
+              "id": "1c674008-8d04-48de-a051-a1199706d3ed",
+              "name": "dbTableName",
+              "value": "={{ $json.dbTableName }}",
+              "type": "string"
+            },
+            {
+              "id": "714977f8-4371-4d2d-8c27-4de8fdec2a7a",
+              "name": "calendarId",
+              "value": "={{ $json.calendarId }}",
+              "type": "string"
+            },
+            {
+              "id": "ad1b9741-7a93-459f-a419-20269cb4ab9c",
+              "name": "eventId",
+              "value": "={{ $json.eventId }}",
+              "type": "string"
+            },
+            {
+              "id": "d89b308d-6efa-42c9-9f21-5b22251156ef",
+              "name": "eventStart",
+              "value": "={{ $json.eventStart }}",
+              "type": "string"
+            },
+            {
+              "id": "c73be941-b89d-4aef-bdae-be60b72caa91",
+              "name": "eventEnd",
+              "value": "={{ $json.eventEnd }}",
+              "type": "string"
+            },
+            {
+              "id": "b6a6bd6f-e1c9-4036-a039-744b34ce63bc",
+              "name": "eventName",
+              "value": "={{ $json.eventName }}",
+              "type": "string"
+            },
+            {
+              "id": "e1190176-e283-4bad-8326-ef196c94af3e",
+              "name": "clientId",
+              "value": "={{ $json.clientId }}",
+              "type": "number"
+            },
+            {
+              "id": "b5660a6f-2214-4a4a-ad32-9479e98c0e9b",
+              "name": "clientPhoneNumber",
+              "value": "={{ $json.clientPhoneNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "cfaa9434-e6f6-4d01-92cd-6923e9d4ae76",
+              "name": "clientName",
+              "value": "={{ $json.clientName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        -248
+      ],
+      "id": "564a6d65-716e-4993-978a-566fcb1a373d",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Set data').item.json.calendarId }}",
+          "mode": "id"
+        },
+        "timeMin": "={{ $('Set data').item.json.eventStart }}",
+        "timeMax": "={{ $('Set data').item.json.eventEnd }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        -832
+      ],
+      "id": "8318208c-153e-4225-8958-2463c72f4886",
+      "name": "Check availability",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Set data').item.json.calendarId }}",
+          "mode": "id"
+        },
+        "start": "={{ $('Set data').item.json.eventStart }}",
+        "end": "={{ $('Set data').item.json.eventEnd }}",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "description": "=Nombre: {{ $('Set data').item.json.clientName }}\nTeléfono: {{ $('Set data').item.json.clientPhoneNumber }}\nID: {{ $('Set data').item.json.clientId }}",
+          "summary": "={{ $('Set data').item.json.clientName }} - {{ $('Set data').item.json.eventName }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        -928
+      ],
+      "id": "bb1b998b-f92e-4f2d-88a8-d29602fd0f35",
+      "name": "Create event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "={{ $('Set data').item.json.dbTableName }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "client_id",
+              "fieldValue": "={{ $('Set data').item.json.clientId }}"
+            },
+            {
+              "fieldId": "event_id",
+              "fieldValue": "={{ $json.id }}"
+            },
+            {
+              "fieldId": "calendar_id",
+              "fieldValue": "={{ $json.organizer.email }}"
+            },
+            {
+              "fieldId": "event_at",
+              "fieldValue": "={{ $json.end.dateTime }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        -928
+      ],
+      "id": "10d3c0da-a550-4977-8e54-386b5d23f961",
+      "name": "Add event to db",
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Set data').item.json.calendarId }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $('Set data').item.json.eventId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        -544
+      ],
+      "id": "38e7cec9-dbdc-4bc2-b864-9eb01683a22a",
+      "name": "Delete event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "={{ $('Set data').item.json.dbTableName }}",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "event_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Set data').item.json.eventId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        864,
+        -544
+      ],
+      "id": "279984ba-bf41-44cd-8e3f-a271d8c82aa1",
+      "name": "Delete event from db",
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $json.calendar_id }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        -352
+      ],
+      "id": "29abbc9b-3eb0-4ecd-bb4f-fcf6cc68bb40",
+      "name": "Get events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Set data').item.json.calendarId }}",
+          "mode": "id"
+        },
+        "timeMin": "={{ $('Set data').item.json.eventStart }}",
+        "timeMax": "={{ $('Set data').item.json.eventEnd }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        368
+      ],
+      "id": "6d1f8332-796b-43a5-a467-eb69663485c8",
+      "name": "Get availability",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9413fb80-58a9-4761-a6ae-7e671615ade4",
+              "name": "output",
+              "value": "Evento creado correctamente",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        -928
+      ],
+      "id": "9089de3f-3f48-4706-a3a1-cee2b54ff6d1",
+      "name": "Event created"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f8e27ba3-b0e3-4eab-bbb3-b8237130fae5",
+              "name": "output",
+              "value": "El horario no está disponible",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        -736
+      ],
+      "id": "99b4db26-7b7c-48d9-908b-0a3483b88e99",
+      "name": "Not availability"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78cb8c8a-caaf-4a00-9658-78066e3f9127",
+              "name": "output",
+              "value": "Evento cancelado correctamente",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        -544
+      ],
+      "id": "163fa331-bcde-4b96-a3a7-33171f19abc7",
+      "name": "Event deleted"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "29e5a7ab-f52e-4c8e-9709-79ecd548d75f",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        368
+      ],
+      "id": "328333a5-8010-438e-9767-fe0f8b442906",
+      "name": "If available"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5698980-2902-4002-b091-8c2986b05823",
+              "name": "output",
+              "value": "=Hay disponibilidad",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        184
+      ],
+      "id": "5338113d-c59e-42bf-9037-eb553d66a736",
+      "name": "Availbility true"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5698980-2902-4002-b091-8c2986b05823",
+              "name": "output",
+              "value": "=No hay disponibilidad",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        376
+      ],
+      "id": "b42aff4d-c269-43b5-bd09-a8f3ff3c5fea",
+      "name": "Availbility false"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0e96bdaf-efb5-43b9-964a-1c1383766552",
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        -256
+      ],
+      "id": "df5ce298-4bb4-4679-803b-64d446b27328",
+      "name": "If there is events"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f499c080-1480-43d4-91cb-7fc6b0772cb3",
+              "name": "output",
+              "value": "No encontré turnos agendados",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -144
+      ],
+      "id": "2d06043b-51d1-49c7-9bec-e800ead96ee4",
+      "name": "No events"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9413fb80-58a9-4761-a6ae-7e671615ade4",
+              "name": "output",
+              "value": "Evento actualizado correctamente",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2208,
+        32
+      ],
+      "id": "a3081486-9dbb-4b79-b1a3-83904fd076a0",
+      "name": "Event updated"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "={{ $json.dbTableName }}",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "client_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.clientId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -256
+      ],
+      "id": "5bb137e1-d14f-4b88-99de-1872b8d25209",
+      "name": "Get many rows",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Get events').item.json.creator.email }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $json.id }}",
+        "updateFields": {
+          "start": "={{ $('Set data').item.json.eventStart }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        -152
+      ],
+      "id": "d0811e8f-1e90-41f8-8165-f055be49887b",
+      "name": "Update an event1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7eb0becd-9594-4bee-ac2e-97ac6a38406d",
+              "name": "Evento:",
+              "value": "={{ $('Code').item.json.events.toJsonString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1984,
+        -352
+      ],
+      "id": "8f19c935-6a00-4e7b-82ff-39fafbe5f555",
+      "name": "Return events"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0f50d2b3-723c-4d9b-aa7a-039d795b331d",
+              "leftValue": "={{ $('Set data').item.json.eventId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        -496
+      ],
+      "id": "c0ba7912-b90d-4625-955f-ddc26d5a2699",
+      "name": "If event id exist"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Set data').item.json.operationType }}",
+                    "rightValue": "delete-event",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d43d58a5-805d-4953-ab29-34b4e1011c07"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "delete-event"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2648e480-f9c5-4010-a60e-4d06627a2a64",
+                    "leftValue": "={{ $('Set data').item.json.operationType }}",
+                    "rightValue": "get-events",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "get-events"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "802c1d01-ddfa-46b3-8040-52d4dab782cf",
+                    "leftValue": "={{ $('Set data').item.json.operationType }}",
+                    "rightValue": "update-event",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "update-event"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1760,
+        -368
+      ],
+      "id": "f8f434ad-acfe-4fd6-9c5b-f62349a481a9",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Get events').item.json.organizer.email }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $('Get events').item.json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        -544
+      ],
+      "id": "6461eb59-18a9-4adf-b91d-6e2874599b5b",
+      "name": "Delete event1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "={{ $('Set data').item.json.dbTableName }}",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "event_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Get events').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        -544
+      ],
+      "id": "f52f3981-5a54-48da-9b39-a5bfa07ec663",
+      "name": "Delete event from db1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "P1SLKYyLcSTAAHKz",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78cb8c8a-caaf-4a00-9658-78066e3f9127",
+              "name": "output",
+              "value": "Evento cancelado correctamente",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2432,
+        -544
+      ],
+      "id": "1ceb64f7-12a2-47fc-bf98-dbc7ecc4580a",
+      "name": "Event deleted1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const events = $input.all();\nconst eventCount = events.length;\nconst eventDetails = events.map(event => ({\n  calendarId: event.json.organizer.email,\n  eventId: event.json.id,\n  dateTime: event.json.start.dateTime,\n  summary: event.json.summary\n}));\nreturn [{ json: { totalEvents: eventCount, events: eventDetails } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        -352
+      ],
+      "id": "37bb3b30-15c6-451c-b760-5a6fac39c46d",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.totalEvents }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    },
+                    "id": "51601709-1749-40ae-92b9-e51bdc7c9d2c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "+1"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "768965c5-fc7d-44a8-9fda-15fadbdf5944",
+                    "leftValue": "={{ $json.totalEvents }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "1"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1536,
+        -368
+      ],
+      "id": "48706479-9d75-41ae-b908-ea56e85f96aa",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0f50d2b3-723c-4d9b-aa7a-039d795b331d",
+              "leftValue": "={{ $('Set data').item.json.eventId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        32
+      ],
+      "id": "d9d2d902-f70d-4f40-8f56-699b96f3e884",
+      "name": "If event id exist1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('Set data').item.json.calendarId }}",
+          "mode": "id"
+        },
+        "eventId": "={{ $('Set data').item.json.eventId }}",
+        "updateFields": {
+          "end": "={{ $('Set data').item.json.eventEnd }}",
+          "start": "={{ $('Set data').item.json.eventStart }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        40
+      ],
+      "id": "a6406f38-55da-489c-85dd-61042eb4f8bd",
+      "name": "Update an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "50yXq9hmQsaDJ5D7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f499c080-1480-43d4-91cb-7fc6b0772cb3",
+              "name": "output",
+              "value": "=Necesito saber cual de estos eventos modificar/cancelar:\n\n{{ $('Code').item.json.events.toJsonString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -560
+      ],
+      "id": "8045e61d-3435-4a15-9b24-fff25e179e2e",
+      "name": "Which event change/delete?"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not availability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Check availability",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If event id exist",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get availability",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If event id exist1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check availability": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create event": {
+      "main": [
+        [
+          {
+            "node": "Add event to db",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add event to db": {
+      "main": [
+        [
+          {
+            "node": "Event created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event": {
+      "main": [
+        [
+          {
+            "node": "Delete event from db",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event from db": {
+      "main": [
+        [
+          {
+            "node": "Event deleted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get availability": {
+      "main": [
+        [
+          {
+            "node": "If available",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If available": {
+      "main": [
+        [
+          {
+            "node": "Availbility true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Availbility false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If there is events": {
+      "main": [
+        [
+          {
+            "node": "Get events",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "If there is events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get events": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an event1": {
+      "main": [
+        [
+          {
+            "node": "Event updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If event id exist": {
+      "main": [
+        [
+          {
+            "node": "Delete event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event1": {
+      "main": [
+        [
+          {
+            "node": "Delete event from db1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event from db1": {
+      "main": [
+        [
+          {
+            "node": "Event deleted1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Delete event1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return events",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update an event1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Which event change/delete?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If event id exist1": {
+      "main": [
+        [
+          {
+            "node": "Update an event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an event": {
+      "main": [
+        [
+          {
+            "node": "Event updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
