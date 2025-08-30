@@ -1,0 +1,1244 @@
+{
+  "name": "business-assistant - v4",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        416
+      ],
+      "id": "0c1da08b-f53b-4d4b-86bf-047ca1f2907a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "3fee3da9-c6a8-405f-b853-6c48d627590d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        224,
+        384
+      ],
+      "id": "26408cc1-76a4-4765-8114-ac06b9d22735",
+      "name": "Chatwoot",
+      "webhookId": "3fee3da9-c6a8-405f-b853-6c48d627590d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "180eac52-f6df-4be5-b8af-d79424d92569",
+              "name": "flowdata.set.projectName",
+              "value": "el_asesor",
+              "type": "string"
+            },
+            {
+              "id": "91d10cd7-a44f-42c9-9a76-fdf38e5778ea",
+              "name": "flowdata.set.chatwootUrl",
+              "value": "https://services-chatwoot.qn7hmw.easypanel.host",
+              "type": "string"
+            },
+            {
+              "id": "0ffc1cda-7046-4765-a766-0d9aa4133927",
+              "name": "flowdata.set.repoOwner",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "48270303-fb7d-4a88-8a75-f261f40b616a",
+              "name": "flowdata.set.repoName",
+              "value": "n8n-infra",
+              "type": "string"
+            },
+            {
+              "id": "1b3b2e19-1a11-447c-b129-c1b9d5e9522f",
+              "name": "flowdata.set.humanPauseDurationInMinuts",
+              "value": 1,
+              "type": "number"
+            },
+            {
+              "id": "fecddc18-98ff-40ba-99d9-60d166d77441",
+              "name": "flowdata.set.bufferTimeToWaitInSeconds",
+              "value": 10,
+              "type": "number"
+            },
+            {
+              "id": "7b8c0519-25f0-4333-8aae-cdcb4cfeb8a6",
+              "name": "flowdata.node.filterAdmin",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "0e8c8451-bc86-47bf-91bb-927c159690d2",
+              "name": "flowdata.node.filterAllExceptAdmin",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "d6a0c05a-6cdc-4241-8fd6-8e5b316ed751",
+              "name": "flowdata.node.firewall",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "b4a33e93-c8fd-459a-835a-c817c1ebc68b",
+              "name": "flowdata.node.getMemory",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "575391d8-4837-44da-a33c-9fc1c6caace0",
+              "name": "flowdata.node.botDetector",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "a8381358-905e-477e-9295-013b563b0fd8",
+              "name": "flowdata.node.languageDetector",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "8987c1d9-84f2-477e-84fe-3d161c32cb57",
+              "name": "flowdata.messageFromAdmin",
+              "value": "={{ $json.body.conversation.labels.includes(\"admin\") }}",
+              "type": "boolean"
+            },
+            {
+              "id": "25093dd1-cee2-47ab-a60b-6d8f8739ca7d",
+              "name": "flowdata.messageFromHuman",
+              "value": "={{ $json.body.conversation.labels.includes(\"human\") }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f0778a22-c8b5-4e66-b548-902224c03e5c",
+              "name": "flowdata.accountId",
+              "value": "={{ $json.body.account.id }}",
+              "type": "number"
+            },
+            {
+              "id": "2f52027a-3835-4ed3-bc30-8e713b65ee8c",
+              "name": "flowdata.conversationId",
+              "value": "={{ $json.body.conversation.messages[0].conversation_id }}",
+              "type": "number"
+            },
+            {
+              "id": "6ef36fd7-bef2-4f0d-a5a7-84b79681d4c2",
+              "name": "flowdata.createdAt",
+              "value": "={{ $json.body.conversation.messages[0].created_at.toDateTime('s').toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "c2b0e878-3336-4815-8971-bcee6673b0de",
+              "name": "flowdata.messageId",
+              "value": "={{ $json.body.conversation.messages[0].id }}",
+              "type": "number"
+            },
+            {
+              "id": "ca83f9c5-edff-45aa-b924-4365b86aa076",
+              "name": "flowdata.messageContent",
+              "value": "={{ $json.body.conversation.messages[0].content }}",
+              "type": "string"
+            },
+            {
+              "id": "fddd99b6-bde9-41f5-afde-5b3b60e75c68",
+              "name": "flowdata.messageType",
+              "value": "={{ $json.body.message_type }}",
+              "type": "string"
+            },
+            {
+              "id": "c7ef341a-8cbf-4531-8cc3-3a2ea20aa161",
+              "name": "flowdata.eventType",
+              "value": "={{ $json.body.event }}",
+              "type": "string"
+            },
+            {
+              "id": "cc94dfe0-140b-4bbe-98fd-b66653c915d6",
+              "name": "flowdata.fileType",
+              "value": "={{ $json.body.conversation.messages[0].attachments[0].file_type}}",
+              "type": "string"
+            },
+            {
+              "id": "c9065bdc-aa73-4426-962a-f9daf2468871",
+              "name": "flowdata.fileUrl",
+              "value": "={{ $json.body.conversation.messages[0].attachments[0].data_url }}",
+              "type": "string"
+            },
+            {
+              "id": "8303ea5d-cc2b-4e12-9224-858afe4f8aec",
+              "name": "flowdata.phoneNumber",
+              "value": "={{ $json.body.conversation.meta.sender.phone_number }}",
+              "type": "string"
+            },
+            {
+              "id": "b75bddb1-0a3c-408d-89b3-5586e5b33f64",
+              "name": "workflow.evaluation",
+              "value": "={{ $json.evaluation }}",
+              "type": "boolean"
+            },
+            {
+              "id": "36820426-b1ca-4503-8a02-daf4a9f4ccfd",
+              "name": "workflow.chat",
+              "value": "={{ $json.chat }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        192
+      ],
+      "id": "45e762d9-721a-4f3c-aac4-613ac7d65374",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set data').item.json.flowdata.set.chatwootUrl }}/api/v1/accounts/{{ $('Set data').item.json.flowdata.accountId }}/conversations/{{ $('Set data').item.json.flowdata.conversationId }}/messages/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('refiner-agent').item.json.output }}"
+            },
+            {
+              "name": "private",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2224,
+        384
+      ],
+      "id": "ca1acc3b-74b1-4802-8a18-b658b54ee4d1",
+      "name": "Send message",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nWyAJQsTprwGKxtE",
+          "name": "Chatwoot - Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Set data').item.json.flowdata.conversationId }}",
+        "tableName": "={{ $('Set data').item.json.flowdata.projectName }}_n8n_chat_histories",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1152,
+        416
+      ],
+      "id": "eddac705-b3bc-4ca2-ad6f-393c2d672436",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "xKI0Rsj9nPwMEm0Q",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1VgzRX4sB431iHLcJpV0ok03HDdIyKILuzsGAk84tCjo",
+          "mode": "list",
+          "cachedResultName": "Evaluations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VgzRX4sB431iHLcJpV0ok03HDdIyKILuzsGAk84tCjo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VgzRX4sB431iHLcJpV0ok03HDdIyKILuzsGAk84tCjo/edit#gid=0"
+        }
+      },
+      "type": "n8n-nodes-base.evaluationTrigger",
+      "typeVersion": 4.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "59a2de8f-18b7-4a91-baf4-e9818b7f6fab",
+      "name": "When fetching a dataset row",
+      "credentials": {
+        "googleApi": {
+          "id": "UDitTNIuZ8oToriK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8bb15ae9-aaa0-4b2f-bfb5-a277f4dae582",
+              "name": "body.message_type",
+              "value": "=incoming",
+              "type": "string"
+            },
+            {
+              "id": "e24befd1-922a-42fc-80b4-ad26331ed110",
+              "name": "body.conversation.labels",
+              "value": "=[]",
+              "type": "array"
+            },
+            {
+              "id": "cc94dfe0-140b-4bbe-98fd-b66653c915d6",
+              "name": "body.attachments",
+              "value": "=[]",
+              "type": "array"
+            },
+            {
+              "id": "43ab7f16-533b-4d5b-a6da-821b7050c8be",
+              "name": "body.conversation.messages[0].attachments[0].file_type",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "1b2a551e-92e9-4ae5-a943-f496759199b4",
+              "name": "body.account.id",
+              "value": "=1",
+              "type": "number"
+            },
+            {
+              "id": "8c10811b-3923-4b22-b868-fec06fa856ed",
+              "name": "body.conversation.messages[0].conversation_id",
+              "value": "=1000000",
+              "type": "number"
+            },
+            {
+              "id": "6ef36fd7-bef2-4f0d-a5a7-84b79681d4c2",
+              "name": "body.conversation.messages[0].created_at",
+              "value": "={{ Math.floor(Date.now() / 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "c2b0e878-3336-4815-8971-bcee6673b0de",
+              "name": "body.conversation.messages[0].id",
+              "value": "={{ $json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "ca83f9c5-edff-45aa-b924-4365b86aa076",
+              "name": "body.conversation.messages[0].content",
+              "value": "={{ $json.user_message }}",
+              "type": "string"
+            },
+            {
+              "id": "c9065bdc-aa73-4426-962a-f9daf2468871",
+              "name": "body.conversation.messages[0].attachments[0].data_url",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "fa382860-2e45-4013-a83f-91fb70b9fab7",
+              "name": "body.conversation.timestamp",
+              "value": "={{ Math.floor(Date.now() / 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "28f689a1-7ffd-4913-9ea5-0c3d703980e7",
+              "name": "evaluation",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "id": "a5570d43-e74d-443e-b3ee-06c2ad775d39",
+      "name": "Set data for evaluations"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1VgzRX4sB431iHLcJpV0ok03HDdIyKILuzsGAk84tCjo",
+          "mode": "list",
+          "cachedResultName": "Evaluations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VgzRX4sB431iHLcJpV0ok03HDdIyKILuzsGAk84tCjo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VgzRX4sB431iHLcJpV0ok03HDdIyKILuzsGAk84tCjo/edit#gid=0"
+        },
+        "outputs": {
+          "values": [
+            {
+              "outputName": "actual_output",
+              "outputValue": "={{ $json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.evaluation",
+      "typeVersion": 4.6,
+      "position": [
+        2224,
+        0
+      ],
+      "id": "3766ae0f-9acd-4c31-9371-17af0628e90a",
+      "name": "Evaluation1",
+      "credentials": {
+        "googleApi": {
+          "id": "UDitTNIuZ8oToriK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1024,
+        416
+      ],
+      "id": "57c5d0a5-14c3-4db3-a6e3-c64293cc5ddc",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1728,
+        416
+      ],
+      "id": "59e78d77-cefb-4182-90f4-1510253dfe01",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "8e29702e-c554-4375-895f-ca2f6a8d48b1",
+      "name": "When chat message received",
+      "webhookId": "e123e56f-3415-4d6d-a5c7-024619778748"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8bb15ae9-aaa0-4b2f-bfb5-a277f4dae582",
+              "name": "body.message_type",
+              "value": "=incoming",
+              "type": "string"
+            },
+            {
+              "id": "e24befd1-922a-42fc-80b4-ad26331ed110",
+              "name": "body.conversation.labels",
+              "value": "=[]",
+              "type": "array"
+            },
+            {
+              "id": "cc94dfe0-140b-4bbe-98fd-b66653c915d6",
+              "name": "body.attachments",
+              "value": "=[]",
+              "type": "array"
+            },
+            {
+              "id": "43ab7f16-533b-4d5b-a6da-821b7050c8be",
+              "name": "body.conversation.messages[0].attachments[0].file_type",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "1b2a551e-92e9-4ae5-a943-f496759199b4",
+              "name": "body.account.id",
+              "value": "=1",
+              "type": "number"
+            },
+            {
+              "id": "8c10811b-3923-4b22-b868-fec06fa856ed",
+              "name": "body.conversation.messages[0].conversation_id",
+              "value": "=2000000",
+              "type": "number"
+            },
+            {
+              "id": "6ef36fd7-bef2-4f0d-a5a7-84b79681d4c2",
+              "name": "body.conversation.messages[0].created_at",
+              "value": "={{ Math.floor(Date.now() / 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "c2b0e878-3336-4815-8971-bcee6673b0de",
+              "name": "body.conversation.messages[0].id",
+              "value": "=999",
+              "type": "number"
+            },
+            {
+              "id": "ca83f9c5-edff-45aa-b924-4365b86aa076",
+              "name": "body.conversation.messages[0].content",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "c9065bdc-aa73-4426-962a-f9daf2468871",
+              "name": "body.conversation.messages[0].attachments[0].data_url",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "fa382860-2e45-4013-a83f-91fb70b9fab7",
+              "name": "body.conversation.timestamp",
+              "value": "={{ Math.floor(Date.now() / 1000) }}",
+              "type": "string"
+            },
+            {
+              "id": "28f689a1-7ffd-4913-9ea5-0c3d703980e7",
+              "name": "evaluation",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "dbada595-b0cf-421c-8fbc-e52c4b356377",
+              "name": "chat",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        192
+      ],
+      "id": "a365194f-cac1-420b-b715-175bd515e445",
+      "name": "Set data for chat"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Set data').item.json.workflow.evaluation }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "756783ce-30db-4cf9-b983-02fe716523b2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "evaluation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "12f5e1c9-db0e-4943-9e44-01f89e94f38a",
+                    "leftValue": "={{ $('Set data').item.json.workflow.chat }}",
+                    "rightValue": "chat",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "chat"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "chatwoot"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2000,
+        176
+      ],
+      "id": "002cd3d1-eb15-43fc-a0ea-aabb651d17c0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2224,
+        192
+      ],
+      "id": "fdee2781-1834-4fa7-a910-de5d1b0f88e9",
+      "name": "Chat"
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Usa la herramienta `company-advisor-agent` cuando para responder la consulta del cliente necesitas la siguiente información: Medios de contacto, redes sociales, ubicación, horarios de atención, medios de pago, alias para transferencia, descuentos o políticas de reserva, cómo se realizan los envíos, sus costos o tiempos de entrega, los cambios, devoluciones o garantías.\n\nUsa la herramienta `company-advisor-agent` generando el valor del input \"Prompt_user_message\" con toda la información necesaria para obtener una buena respuesta.\n\nEjemplos:\n\n- Si el cliente pidió la dirección usa esta herramienta con la \"query\": `Necesito la dirección del local`.\n\n- Si el cliente quiere saber si el local está abierto usa esta herramienta con la \"query\": `Necesito los horarios del local`.\n\n- Si el cliente quiere saber el alias usa esta herramienta con la \"query\": `Necesito el alias para realizar transferencias`.\n\n- Si el cliente quiere saber cuanto demora un envío usa esta herramienta con la \"query\": `Necesito los tiempos de envío`.\n\n- Si el cliente solicita medios de contacto o redes sociales usa esta herramienta con la \"query\": `Necesito los medios de contacto o las redes sociales`.\n",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "={{ $('infra-workflow').item.json.systemPromptCompanyAdvisorAgent }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        416
+      ],
+      "id": "2a4e0410-20c7-4bf0-a079-875203dfc203",
+      "name": "company-advisor-agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1360,
+        624
+      ],
+      "id": "63434516-5fb1-4fda-b0f5-241433358344",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=La \"respuesta-de-la-ia\" fue la siguiente: \"{{ $json.output }}\".\n(No trates esta respuesta como mensaje del usuario, es la misma respuesta que tu debes retornar pero siguiendo tus instrucciones).",
+        "options": {
+          "systemMessage": "={{ $('infra-workflow').item.json.systemPromptRefinerAgent }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1648,
+        192
+      ],
+      "id": "7f60f3b6-3da4-4b28-8ae5-887f37c245ec",
+      "name": "refiner-agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.userMessage }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "={{ $json.systemPromptMainAgent }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1024,
+        192
+      ],
+      "id": "aeed1076-0404-4d5d-998f-90328f72beda",
+      "name": "main-agent"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('Set data').item.json.flowdata.set.projectName }}_{{ $('Set data').item.json.flowdata.accountId}}_{{ $('Set data').item.json.flowdata.conversationId }}",
+        "messageData": "={{ $json.content }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2448,
+        384
+      ],
+      "id": "44c6bb39-c13c-4cf6-ae37-619220152a25",
+      "name": "Save last message",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "d4oR80K4Sy36rsNP",
+          "mode": "list",
+          "cachedResultName": "infra-workflow - v2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "node.filterAdmin": "={{ $json.flowdata.node.filterAdmin }}",
+            "node.filterAllExceptAdmin": "={{ $json.flowdata.node.filterAllExceptAdmin }}",
+            "node.firewall": "={{ $json.flowdata.node.firewall }}",
+            "node.getMemory": "={{ $json.flowdata.node.getMemory }}",
+            "node.botDetector": "={{ $json.flowdata.node.botDetector }}",
+            "node.languageDetector": "={{ $json.flowdata.node.languageDetector }}",
+            "messageFromAdmin": "={{ $json.flowdata.messageFromAdmin }}",
+            "messageFromHuman": "={{ $json.flowdata.messageFromHuman }}",
+            "humanPauseDurationInMinuts": "={{ $json.flowdata.set.humanPauseDurationInMinuts }}",
+            "bufferTimeToWaitInSeconds": "={{ $json.flowdata.set.bufferTimeToWaitInSeconds }}",
+            "accountId": "={{ $json.flowdata.accountId }}",
+            "conversationId": "={{ $json.flowdata.conversationId }}",
+            "messageId": "={{ $json.flowdata.messageId }}",
+            "projectName": "={{ $json.flowdata.set.projectName }}",
+            "chatwootUrl": "={{ $json.flowdata.set.chatwootUrl }}",
+            "repoName": "={{ $json.flowdata.set.repoName }}",
+            "createdAt": "={{ $json.flowdata.createdAt }}",
+            "messageContent": "={{ $json.flowdata.messageContent }}",
+            "eventType": "={{ $json.flowdata.eventType }}",
+            "fileType": "={{ $json.flowdata.fileType }}",
+            "fileUrl": "={{ $json.flowdata.fileUrl }}",
+            "phoneNumber": "={{ $json.flowdata.phoneNumber.replace('+', '') }}",
+            "messageFromMe": "={{ $json.flowdata.messageType === \"outgoing\" ? true : false }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "projectName",
+              "displayName": "projectName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatwootUrl",
+              "displayName": "chatwootUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "repoName",
+              "displayName": "repoName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "humanPauseDurationInMinuts",
+              "displayName": "humanPauseDurationInMinuts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "bufferTimeToWaitInSeconds",
+              "displayName": "bufferTimeToWaitInSeconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "node.filterAdmin",
+              "displayName": "node.filterAdmin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "node.filterAllExceptAdmin",
+              "displayName": "node.filterAllExceptAdmin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "node.firewall",
+              "displayName": "node.firewall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "node.getMemory",
+              "displayName": "node.getMemory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "node.botDetector",
+              "displayName": "node.botDetector",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "node.languageDetector",
+              "displayName": "node.languageDetector",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "messageFromAdmin",
+              "displayName": "messageFromAdmin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "messageFromHuman",
+              "displayName": "messageFromHuman",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "accountId",
+              "displayName": "accountId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "conversationId",
+              "displayName": "conversationId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "messageId",
+              "displayName": "messageId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "messageContent",
+              "displayName": "messageContent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "messageFromMe",
+              "displayName": "messageFromMe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "eventType",
+              "displayName": "eventType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fileType",
+              "displayName": "fileType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "fileUrl",
+              "displayName": "fileUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        192
+      ],
+      "id": "e0d76e62-15a3-4dc1-978b-6e98371fa2f8",
+      "name": "infra-workflow"
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "main-agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "infra-workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message": {
+      "main": [
+        [
+          {
+            "node": "Save last message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "main-agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When fetching a dataset row": {
+      "main": [
+        [
+          {
+            "node": "Set data for evaluations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data for evaluations": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "main-agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "refiner-agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Set data for chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data for chat": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Evaluation1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Chat",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "company-advisor-agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "company-advisor-agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "main-agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "refiner-agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "main-agent": {
+      "main": [
+        [
+          {
+            "node": "refiner-agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "infra-workflow": {
+      "main": [
+        [
+          {
+            "node": "main-agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
