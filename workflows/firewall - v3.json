@@ -1,0 +1,464 @@
+{
+  "name": "firewall - v3",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "projectName"
+            },
+            {
+              "name": "userId",
+              "type": "number"
+            },
+            {
+              "name": "messageContent"
+            },
+            {
+              "name": "messageFromMe",
+              "type": "boolean"
+            },
+            {
+              "name": "messageFromHuman",
+              "type": "boolean"
+            },
+            {
+              "name": "createdAt"
+            },
+            {
+              "name": "eventType"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1088,
+        96
+      ],
+      "id": "8e8c7d99-65e2-4aa4-9121-d866898679a3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c890b60-be7b-496f-8d22-878ee2f87ad4",
+              "leftValue": "={{ $json.messageFromHuman }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -416,
+        96
+      ],
+      "id": "460e63eb-c708-48af-950d-84cd1bfbd78a",
+      "name": "Filter human"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        256,
+        0
+      ],
+      "id": "f0d038a5-4922-4784-8631-ddf37e3024aa",
+      "name": "Main flow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5682122c-b06f-4bbf-a3d9-e6c812865293",
+              "name": "last_message_content",
+              "value": "={{ $('Get last message').item.json.last_message.last() }}",
+              "type": "string"
+            },
+            {
+              "id": "fcdeec06-2ac4-44c4-bfae-d775676d5e44",
+              "name": "projectName",
+              "value": "={{ $('When Executed by Another Workflow').item.json.projectName }}",
+              "type": "string"
+            },
+            {
+              "id": "199ecbc8-99be-4311-a404-75c17c086b87",
+              "name": "userId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.userId }}",
+              "type": "number"
+            },
+            {
+              "id": "89bb3eb7-2fff-4e30-b520-cf46f1a201e6",
+              "name": "messageContent",
+              "value": "={{ $('When Executed by Another Workflow').item.json.messageContent }}",
+              "type": "string"
+            },
+            {
+              "id": "83c84889-b33c-4371-a5ba-ee0717cc0f47",
+              "name": "messageFromMe",
+              "value": "={{ $('When Executed by Another Workflow').item.json.messageFromMe }}",
+              "type": "boolean"
+            },
+            {
+              "id": "0270b2e3-a840-402b-ba56-e72368ba1d5f",
+              "name": "messageFromHuman",
+              "value": "={{ $('When Executed by Another Workflow').item.json.messageFromHuman }}",
+              "type": "boolean"
+            },
+            {
+              "id": "35b5bc23-fe92-444a-a1fe-85816f2d5a96",
+              "name": "eventType",
+              "value": "={{ $('When Executed by Another Workflow').item.json.eventType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        96
+      ],
+      "id": "a4974b4d-7120-4c76-a9fc-75e0f5d401c2",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2502a693-3633-4f08-b368-3aff5a229ecb",
+              "leftValue": "={{ $('Set data').item.json.messageContent }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "96ab1f4e-54ac-45bb-9717-4a32e07519f0",
+              "leftValue": "={{ $('Set data').item.json.last_message_content }}",
+              "rightValue": "={{ $('Set data').item.json.messageContent }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        192
+      ],
+      "id": "86cac525-6b62-4278-a3e8-8ff96e739b4b",
+      "name": "Bot message?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ace2d184-3bc9-40b5-91df-c96b84275149",
+              "leftValue": "filter",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        96
+      ],
+      "id": "7af04ac1-ccb6-4f7b-b27f-8142fed9125e",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2502a693-3633-4f08-b368-3aff5a229ecb",
+              "leftValue": "={{ $('Set data').item.json.messageFromMe }}",
+              "rightValue": "incoming",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        96
+      ],
+      "id": "986d976a-0331-44e4-a8cc-a269393e0f1e",
+      "name": "Incoming?"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "last_message",
+        "key": "={{ $json.projectName }}_{{ $json.userId }}_lastMessage",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -864,
+        96
+      ],
+      "id": "fd8e84f9-d48c-486d-803a-2ec9e6c83807",
+      "name": "Get last message",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.userId }}_lastMessage"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        480,
+        96
+      ],
+      "id": "8170ba1c-3963-46ab-b6e4-31cde6d5645c",
+      "name": "Delete last message",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c890b60-be7b-496f-8d22-878ee2f87ad4",
+              "leftValue": "={{ $('Set data').item.json.eventType }}",
+              "rightValue": "message_created",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "06c82458-a425-4e4b-8a05-7118190ced82",
+              "leftValue": "={{ $('Set data').item.json.messageContent }}",
+              "rightValue": "undefined",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -192,
+        96
+      ],
+      "id": "b97b6340-c1bd-4ed9-93db-9379c68ded0c",
+      "name": "Filter updated & undefined message"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        480,
+        288
+      ],
+      "id": "530bfbac-4b68-4294-baa5-7c8608fef339",
+      "name": "Main flow1"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get last message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter human": {
+      "main": [
+        [
+          {
+            "node": "Filter updated & undefined message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "Filter human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bot message?": {
+      "main": [
+        [
+          {
+            "node": "Delete last message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Main flow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incoming?": {
+      "main": [
+        [
+          {
+            "node": "Main flow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bot message?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get last message": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete last message": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter updated & undefined message": {
+      "main": [
+        [
+          {
+            "node": "Incoming?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
