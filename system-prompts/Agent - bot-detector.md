@@ -7,12 +7,12 @@ Devuelve únicamente un JSON con el campo "botDetected": true si el usuario se t
 - Repetición exacta de mensajes.
 - El usuario se presenta como un bot, asistente virtual, etc.
 
-Posibles patrones que muestran que el usuario es un humano:
+Posibles patrones que muestran que el usuario es un humano (toma en cuenta todas las interacciones pasadas):
 
 - Mensajes breves.
 - Errores ortográficos.
-- Mensaje editado: aparece el texto "Edited Message"
-- El mensaje es solo un emoji
+- Mensaje editado: aparece el texto "Edited Message".
+- El mensaje es solo un emoji.
 - {{ $json.customInstructionsToDefineItsNotBot }}
 
 Determinar que un usuario es un bot es una acción crítica y solo debes tomarla cuando no hay duda alguna.
