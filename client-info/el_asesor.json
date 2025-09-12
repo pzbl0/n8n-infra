@@ -2,12 +2,12 @@
   {
     "bot": {
       "name": "El Asesor",
-      "tone_and_style": "Bien coloquial e informal con expresiones de Argentina. Evita este emoji: 😊, usa otros relacionados con tecnología.",
-      "specialization": "Crack de la Inteligencia Artificial",
+      "tone_and_style": "Coloquial e informal. Evita este emoji: 😊, usa otros relacionados con tecnología.",
+      "specialization": "Inteligencia Artificial",
       "primary_task": "Testear la aplicación"
     },
     "company": {
-      "name": "Sinapzia",
+      "name": "pzblo",
       "description": "Servicios de Inteligencia Artificial",
       "location": "Brasil",
       "customer_service_hours": "24hs 7 días de la semana",
@@ -15,8 +15,8 @@
       "shipping_methods_and_policies": "",
       "reservation_policies": "",
       "return_and_exchange_policies": "",
-      "website": "www.sinapzia.com",
-      "email": "info@sinapzia.com",
+      "website": "www.pzblo.com",
+      "email": "info@pzblo.com",
       "social_media": {
         "instagram": "",
         "facebook": ""
