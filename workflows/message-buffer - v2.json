@@ -1,0 +1,362 @@
+{
+  "name": "message-buffer - v2",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "list_array",
+        "key": "={{ $('Data').item.json.userId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        128
+      ],
+      "id": "9baff893-60d2-479a-9280-e9c95ae0400c",
+      "name": "Get messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $json.userId }}",
+        "messageData": "={{ JSON.stringify($json.message) }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        128
+      ],
+      "id": "32df0550-dfdc-4afb-8caa-47c4253decf2",
+      "name": "Push messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": "={{ $('Data').item.json.timeToWaitInSeconds }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        224
+      ],
+      "id": "2c02ad2e-b0df-4d9e-ac09-970b1ff9c04a",
+      "name": "Wait",
+      "webhookId": "fbf6649e-8935-4e23-8cec-7c1d4037742a"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('Data').item.json.userId }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "1fef7a27-7023-4734-99da-4625e00ebcd3",
+      "name": "Delete messages",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ec9d6a6-e7a2-4c92-854a-16daafc60117",
+              "name": "output",
+              "value": "={{ $json.list_array.map(item => JSON.parse(item).content).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ],
+      "id": "5fd1998d-286f-43f0-9bf8-a359015985bd",
+      "name": "Join messages"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "userId"
+            },
+            {
+              "name": "messageId"
+            },
+            {
+              "name": "messageContent"
+            },
+            {
+              "name": "messageTimestamp"
+            },
+            {
+              "name": "timeToWaitInSeconds",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1328,
+        128
+      ],
+      "id": "2d27f32a-1115-41b7-a8fb-a33292478234",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4fbc21dc-7879-4474-bb5c-e56216fa05b4",
+              "leftValue": "={{ JSON.parse($json.list_array.first()).id }}",
+              "rightValue": "={{ $('Data').item.json.message.id }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        48
+      ],
+      "id": "a51cfc3a-d6fd-4d0b-b490-12fd9707fff1",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dc6b80d6-7348-4b22-b518-d84f899c6e6f",
+                    "leftValue": "={{ JSON.parse($json.list_array.last()).timestamp }}",
+                    "rightValue": "={{ $now.minus($('Data').item.json.timeToWaitInSeconds, 'seconds') }}",
+                    "operator": {
+                      "type": "dateTime",
+                      "operation": "before"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Continue"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Wait"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "9419c4a7-4c14-4776-97e7-daf5d4fec382",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8442ad7-3b69-4758-af31-b69109094ec1",
+              "name": "userId",
+              "value": "={{ $json.userId }}_buffer",
+              "type": "string"
+            },
+            {
+              "id": "ebfd8bb8-8d51-437f-9f30-5f9916835d2a",
+              "name": "message.id",
+              "value": "={{ $json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "82efaf51-a82e-4114-8380-ead93f1512ff",
+              "name": "message.content",
+              "value": "={{ $json.messageContent }}",
+              "type": "string"
+            },
+            {
+              "id": "617e26f8-8bcf-4fd1-82e6-490ace79d531",
+              "name": "message.timestamp",
+              "value": "={{ $json.messageTimestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "6d93fdd7-11b4-4de4-b04e-7131944d578e",
+              "name": "timeToWaitInSeconds",
+              "value": "={{ $json.timeToWaitInSeconds }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        128
+      ],
+      "id": "37103bc1-c9eb-4f49-a164-618a5be9f470",
+      "name": "Data"
+    }
+  ],
+  "connections": {
+    "Get messages": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push messages": {
+      "main": [
+        [
+          {
+            "node": "Get messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete messages": {
+      "main": [
+        [
+          {
+            "node": "Join messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Delete messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Push messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
