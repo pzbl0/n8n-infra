@@ -1,0 +1,1803 @@
+{
+  "name": "infra-workflow - v3",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8dbf19e8-e871-4c1d-9dc2-f1d4f4103841",
+              "leftValue": "={{ $json.flowdata_admin }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        -32
+      ],
+      "id": "7e4ea5e8-caff-4fc0-acb2-146b20e0ccfa",
+      "name": "Filter admin"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2f9ad325-43d1-40f3-867b-a1f883cbf221",
+              "leftValue": "={{ $json.flowdata.admin }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1152,
+        -32
+      ],
+      "id": "631760b9-00bc-4e43-88c1-0a7ab695d1f1",
+      "name": "Filter all except admin"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "JDTOEiRqiVxzsdX7",
+          "mode": "list",
+          "cachedResultName": "firewall - v4"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "messageFromMe": "={{ $('Set data').item.json.messageFromMe }}",
+            "messageFromHuman": "={{ $('Set data').item.json.messageFromHuman }}",
+            "projectName": "={{ $('Set data').item.json.projectName }}",
+            "userId": "={{ $('Set data').item.json.phoneNumber }}",
+            "messageContent": "={{ $('Set data').item.json.messageContent }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "projectName",
+              "displayName": "projectName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "messageContent",
+              "displayName": "messageContent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "messageFromMe",
+              "displayName": "messageFromMe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "messageFromHuman",
+              "displayName": "messageFromHuman",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean"
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        -32
+      ],
+      "id": "3765af6c-82a5-4cf1-a34f-6ab1f90f4e0f",
+      "name": "firewall"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "DoQMTvZyXhcM5v3w",
+          "mode": "list",
+          "cachedResultName": "message-buffer - v2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timeToWaitInSeconds": "={{ $('Set data').item.json.bufferTimeToWaitInSeconds }}",
+            "messageTimestamp": "={{ $('Set data').item.json.createdAt }}",
+            "messageContent": "={{ $json.text }}",
+            "messageId": "={{ $('Set data').item.json.messageId }}",
+            "userId": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.phoneNumber }}_buffer"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "messageId",
+              "displayName": "messageId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "messageContent",
+              "displayName": "messageContent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "messageTimestamp",
+              "displayName": "messageTimestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "timeToWaitInSeconds",
+              "displayName": "timeToWaitInSeconds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2496,
+        144
+      ],
+      "id": "df7e5f42-de00-4f8d-8587-49cf4ce2c0a4",
+      "name": "message-buffer"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "t9s3V7I8tGK9RW1l",
+          "mode": "list",
+          "cachedResultName": "transcribe-media - v1.3"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $('Set data').item.json.messageContent }}",
+            "media_url": "={{ $('Set data').item.json.fileUrl }}",
+            "media_type": "={{ $('Set data').item.json.fileType }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "media_type",
+              "displayName": "media_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "media_url",
+              "displayName": "media_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2272,
+        144
+      ],
+      "id": "ed096723-b784-4c12-b759-77e6a7b0eeb8",
+      "name": "transcribe-media"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "F1Eb1hg8VcjpLsjE",
+          "mode": "list",
+          "cachedResultName": "intention-analizer - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_message": "={{ $('message-buffer').item.json.output }}",
+            "conversation_id": "={{ $('Start').item.json.flowdata_conversation_id }}",
+            "client_name": "={{ $('Start').item.json.flowdata_project_name }}",
+            "system_messsage": "=## ROL:\n\nActúa como un analista de conversaciones para un asistente virtual. Se te proporcionará el historial del chat completo con el usuario y su último mensaje. Tu única tarea es analizar ese contenido y determinar qué tipo de acción se necesita para responder al usuario, y explicar por qué llegaste a esa conclusión.\n\nLas posibles opciones de respuesta son las siguientes:\n\n- `\"informacion-de-la-empresa\"` → Cuando el usuario solicita datos como ubicación de la empresa, los horarios de atención, los medios o políticas de pago, el alias para transferencias, los métodos o políticas de envío, políticas de cambios y devoluciones, redes sociales o el sitio web, o cualquier otra información propia de la empresa.\n- `\"asesoramiento\"` → Cuando el usuario necesita ayuda para tomar una decisión, si necesita precios de tinturas en general, carta/cartilla de colores o saber los tonos dispomibles, pregunta por tinturas sin amoníaco, cómo cubrir canas, hacer reflejos, tonalizar, entender qué es mejor para su caso, etc.\n- `\"buscador-de-productos\"` → Cuando el usuario está buscando un producto específico, disponibilidad, precio, o detalles de productos.\n- `\"cierre-de-venta\"` → Cuando en la última interacción el bot le pasó un pedido a confirmar y ahora el último mensaje del usuario confirma.\n- `\"general\"` → Ninguna de las anteriores.\n\n---\n\nDevuelve la respuesta en formato JSON como una lista de objetos, cada uno con las claves \"require\" y \"why\".\n\nDevuelve más de un objeto si la pregunta del usuario lo requiere. Es válido devolver uno, dos o más de dos objetos dependiendo del contenido del mensaje.\n\n---\n\n### Formato de salida:\n\n```json\n[\n  {\n    \"require\": \"informacion-de-la-empresa\",\n    \"why\": \"porque el usuario preguntó el horario de atención\"\n  },\n  {\n    \"require\": \"buscador-de-productos\",\n    \"why\": \"porque el usuario preguntó por disponibilidad del producto X\"\n  }\n]\n```\n",
+            "chat_history": "={{ $('get-memory').item.json.chat_history }}"
+          },
+          "matchingColumns": [
+            "output_firstItem",
+            "flowdata_conversation_id_toString"
+          ],
+          "schema": [
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user_message",
+              "displayName": "user_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "chat_history",
+              "displayName": "chat_history",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "system_messsage",
+              "displayName": "system_messsage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4736,
+        80
+      ],
+      "name": "intention-analizer",
+      "id": "4573f0c2-27d8-4076-b693-f1e084a9329e"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "NGMARSo1UAmMG1FM",
+          "mode": "list",
+          "cachedResultName": "get-memory - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_id": "={{ $('Set data').item.json.conversationId }}",
+            "client_name": "={{ $('Set data').item.json.projectName }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2944,
+        80
+      ],
+      "id": "95a3ab7e-c9cf-4286-a240-e4c85ca4ef97",
+      "name": "get-memory"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "WNyHyrBoIJ73Jxyl",
+          "mode": "list",
+          "cachedResultName": "language-detector - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_message": "={{ $('message-buffer').item.json.output }}",
+            "default_language": "Español"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_message",
+              "displayName": "user_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "default_language",
+              "displayName": "default_language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3840,
+        80
+      ],
+      "id": "f90c1355-7ffc-4380-86a5-84cf6149ddb2",
+      "name": "language-detector"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "OdGlhJN4N2yn72zW",
+          "mode": "list",
+          "cachedResultName": "build-system-message - v3.3"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "business_name": "={{ $('Set data').item.json.projectName }}",
+            "language": "Español",
+            "repo_name": "={{ $('Set data').item.json.repoName }}"
+          },
+          "matchingColumns": [
+            "language"
+          ],
+          "schema": [
+            {
+              "id": "business_name",
+              "displayName": "business_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "repo_name",
+              "displayName": "repo_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "language",
+              "displayName": "language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4960,
+        144
+      ],
+      "id": "76f2db7f-c0a5-407e-90b4-043bb57a234a",
+      "name": "build-system-message"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "68zYbBj2adQEPzff",
+          "mode": "list",
+          "cachedResultName": "bot-detector - v2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userMessage": "={{ $('Set data').item.json.messageContent }}",
+            "customInstructionsToDefineItsNotBot": "={{ $('Set data').item.json.customInstructionsToDefineItsNotBot }}",
+            "chatHistory": "={{ $json.chat_history }}"
+          },
+          "matchingColumns": [
+            "output_firstItem",
+            "flowdata_conversation_id_toString"
+          ],
+          "schema": [
+            {
+              "id": "userMessage",
+              "displayName": "userMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatHistory",
+              "displayName": "chatHistory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "customInstructionsToDefineItsNotBot",
+              "displayName": "customInstructionsToDefineItsNotBot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3392,
+        80
+      ],
+      "name": "bot-detector",
+      "id": "09793d85-7f2d-4e3d-9437-3e2871be933d"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8MHj8V4mBnqgU6K0",
+          "mode": "list",
+          "cachedResultName": "lead-reactivation - v1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "client_name": "={{ $('Start').item.json.flowdata_project_name }}",
+            "user_message": "={{ $('Start').item.json.flowdata_content }}",
+            "session_id": "={{ $('Start').item.json.flowdata_conversation_id }}",
+            "account_id": "={{ $('Start').item.json.flowdata_account_id }}",
+            "url": "={{ $('Start').item.json.flowdata_url }}",
+            "time_to_reactivate_in_hours": 24,
+            "campaing_text_to_recognize": "campaña",
+            "text_to_reactive": "Texto para reactivar"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "account_id",
+              "displayName": "account_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "user_message",
+              "displayName": "user_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "campaing_text_to_recognize",
+              "displayName": "campaing_text_to_recognize",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "time_to_reactivate_in_hours",
+              "displayName": "time_to_reactivate_in_hours",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "text_to_reactive",
+              "displayName": "text_to_reactive",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4288,
+        80
+      ],
+      "id": "ec2e8bdf-2cda-4186-98ee-d2f3ee172c1f",
+      "name": "lead-reactivation"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de7c619b-984e-499a-a53c-583b254bda99",
+              "name": "systemPromptMainAgent",
+              "value": "={{ $json[\"main-agent\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "2d7347dd-365e-4f4f-91b4-256c8aa33779",
+              "name": "systemPromptCompanyAdvisorAgent",
+              "value": "={{ $json[\"company-advisor-agent\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "0283b088-beb7-4a10-9ec7-f4b935bb494b",
+              "name": "systemPromptRefinerAgent",
+              "value": "={{ $json[\"refiner-agent\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "4c9efe44-696d-4fc7-8152-2bc707610516",
+              "name": "userMessage",
+              "value": "={{ $('message-buffer').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5184,
+        144
+      ],
+      "id": "0657b4d4-bfab-4665-a1b8-320744c7c530",
+      "name": "Return"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e855a8b3-270b-4564-8aa3-38913081538e",
+              "leftValue": "={{ $json.node.filterAdmin }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        48
+      ],
+      "id": "e865c10b-6d55-40b1-8bb4-392f2e83e41b",
+      "name": "If filter admin"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "11e2301f-ff9e-443a-9180-328b4cca93ee",
+              "leftValue": "={{ $('Set data').item.json.node.filterAllExceptAdmin }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        928,
+        48
+      ],
+      "id": "fc9ff54e-f988-4742-889d-b5afe80c0110",
+      "name": "If filter all except admin"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ce9a61cc-1d53-4bb9-9f08-46c3b66b99f7",
+              "leftValue": "={{ $('Set data').item.json.node.firewall }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1376,
+        48
+      ],
+      "id": "d5fe52eb-a1c9-4ee5-8ef0-e71011a453d7",
+      "name": "If firewall"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67b23e1d-fa8b-44de-be43-36b36c4fc9b8",
+              "name": "projectName",
+              "value": "={{ $json.projectName }}",
+              "type": "string"
+            },
+            {
+              "id": "5ff537c8-71df-4538-b1cd-9e0171611dac",
+              "name": "repoName",
+              "value": "={{ $json.repoName }}",
+              "type": "string"
+            },
+            {
+              "id": "ee39afc7-b9a6-44e5-9f16-9c9404209fee",
+              "name": "humanPauseDurationInMinuts",
+              "value": "={{ $json.humanPauseDurationInMinuts }}",
+              "type": "number"
+            },
+            {
+              "id": "c6a7f9a9-d4ca-494a-827c-29aadb0d13d0",
+              "name": "bufferTimeToWaitInSeconds",
+              "value": "={{ $json.bufferTimeToWaitInSeconds }}",
+              "type": "number"
+            },
+            {
+              "id": "024cc4ed-b37e-4925-946a-edccf669a714",
+              "name": "node.filterAdmin",
+              "value": "={{ $json[\"node.filterAdmin\"] }}",
+              "type": "boolean"
+            },
+            {
+              "id": "b915c572-9f53-4f01-a25c-7d7b2c494e43",
+              "name": "node.filterAllExceptAdmin",
+              "value": "={{ $json[\"node.filterAllExceptAdmin\"] }}",
+              "type": "boolean"
+            },
+            {
+              "id": "da8e86b2-80fa-4b9c-91f2-66b37b362852",
+              "name": "node.firewall",
+              "value": "={{ $json[\"node.firewall\"] }}",
+              "type": "boolean"
+            },
+            {
+              "id": "0cb22fdc-4103-4b46-b76b-1d50226c8418",
+              "name": "node.getMemory",
+              "value": "={{ $json[\"node.getMemory\"] }}",
+              "type": "boolean"
+            },
+            {
+              "id": "0ea8aa8e-9209-4d73-9f42-34c9b95f6f20",
+              "name": "node.botDetector",
+              "value": "={{ $json[\"node.botDetector\"] }}",
+              "type": "boolean"
+            },
+            {
+              "id": "e7a45d4f-bf08-4bbc-8a00-d4eb83ab1a06",
+              "name": "customInstructionsToDefineItsNotBot",
+              "value": "={{ $json.customInstructionsToDefineItsNotBot }}",
+              "type": "string"
+            },
+            {
+              "id": "a9630001-ffc8-4bf6-a64d-a7164be17e39",
+              "name": "node.languageDetector",
+              "value": "={{ $json[\"node.languageDetector\"] }}",
+              "type": "boolean"
+            },
+            {
+              "id": "aba53612-d7ee-4f51-b43e-6c7f55aacd3d",
+              "name": "messageFromAdmin",
+              "value": "={{ $json.messageFromAdmin }}",
+              "type": "boolean"
+            },
+            {
+              "id": "2ba0da1a-c98b-4d69-9087-f8003897f5f9",
+              "name": "messageFromHuman",
+              "value": "={{ $json.messageFromHuman }}",
+              "type": "boolean"
+            },
+            {
+              "id": "cd7f9344-8c41-4541-8cac-e7519d203199",
+              "name": "messageFromMe",
+              "value": "={{ $json.messageFromMe }}",
+              "type": "boolean"
+            },
+            {
+              "id": "75cdade2-02d5-44bf-a2fc-84f6930c5068",
+              "name": "createdAt",
+              "value": "={{ $json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "77533493-1a1b-43e6-992e-39ef62635619",
+              "name": "messageId",
+              "value": "={{ $json.messageId }}",
+              "type": "string"
+            },
+            {
+              "id": "d31ed920-83f7-4897-8d6d-707c8bac52a3",
+              "name": "messageContent",
+              "value": "={{ $json.messageContent }}",
+              "type": "string"
+            },
+            {
+              "id": "477b0863-bf7e-4023-b0fe-db7c8048bc21",
+              "name": "fileType",
+              "value": "={{ $json.fileType }}",
+              "type": "string"
+            },
+            {
+              "id": "090016b1-cfb3-4899-a140-1561c5965d5b",
+              "name": "fileUrl",
+              "value": "={{ $json.fileUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "dfeedb1c-a853-4396-9b74-8eeb142117fa",
+              "name": "phoneNumber",
+              "value": "={{ $json.phoneNumber }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        48
+      ],
+      "id": "6aea9ffd-ec23-4092-b86e-aceeb6e9a359",
+      "name": "Set data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "644d29d0-0ad5-4439-8907-bb29c1328d80",
+              "leftValue": "={{ $('Set data').item.json.node.getMemory }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2720,
+        144
+      ],
+      "id": "e116697f-089d-497a-ad2f-6016c4728625",
+      "name": "If get memory"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "742c9956-cbc2-47b6-b974-09f356bc60f3",
+              "leftValue": "={{ $('Set data').item.json.node.botDetector }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3168,
+        144
+      ],
+      "id": "0bd2506d-6279-47ed-92f4-e4201966a659",
+      "name": "If bot detector"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "742c9956-cbc2-47b6-b974-09f356bc60f3",
+              "leftValue": "={{ $('Set data').item.json.node.languageDetector }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3616,
+        144
+      ],
+      "id": "f988082a-60fc-44c6-903b-ef1e7c37006d",
+      "name": "If language detector"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "98ee6150-a9fd-4e00-999e-0d60ed32c85f",
+              "leftValue": "={{ $('Set data').item.json.node.leadReactivation }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4064,
+        144
+      ],
+      "id": "e962c0e2-b299-4e29-8e0d-317208cb32cd",
+      "name": "If lead reactivation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "98ee6150-a9fd-4e00-999e-0d60ed32c85f",
+              "leftValue": "={{ $('Set data').item.json.node.intentionAnalizer }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4512,
+        144
+      ],
+      "id": "fe4b7886-9951-4be4-9c06-21f43a398395",
+      "name": "If intention analizer"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Lg5Nq0YShSbn3Swj",
+          "mode": "list",
+          "cachedResultName": "human-intervention - v1.3"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "messageId": "={{ $('Set data').item.json.messageId }}",
+            "pauseDurationInMinuts": "={{ $('Set data').item.json.humanPauseDurationInMinuts }}",
+            "userId": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.phoneNumber }}",
+            "createdAt": "={{ $('Set data').item.json.createdAt }}",
+            "messageFromMe": "={{ $('Set data').item.json.messageFromMe }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "messageId",
+              "displayName": "messageId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "messageFromMe",
+              "displayName": "messageFromMe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pauseDurationInMinuts",
+              "displayName": "pauseDurationInMinuts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2272,
+        -48
+      ],
+      "name": "human-intervention",
+      "id": "2156e48d-0d98-419c-8d57-0416a814cfbd"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "projectName"
+            },
+            {
+              "name": "repoName"
+            },
+            {
+              "name": "humanPauseDurationInMinuts",
+              "type": "number"
+            },
+            {
+              "name": "bufferTimeToWaitInSeconds",
+              "type": "number"
+            },
+            {
+              "name": "node.filterAdmin",
+              "type": "boolean"
+            },
+            {
+              "name": "node.filterAllExceptAdmin",
+              "type": "boolean"
+            },
+            {
+              "name": "node.firewall",
+              "type": "boolean"
+            },
+            {
+              "name": "node.getMemory",
+              "type": "boolean"
+            },
+            {
+              "name": "node.botDetector",
+              "type": "boolean"
+            },
+            {
+              "name": "customInstructionsToDefineItsNotBot"
+            },
+            {
+              "name": "node.languageDetector",
+              "type": "boolean"
+            },
+            {
+              "name": "messageFromAdmin",
+              "type": "boolean"
+            },
+            {
+              "name": "messageFromHuman",
+              "type": "boolean"
+            },
+            {
+              "name": "messageFromMe",
+              "type": "boolean"
+            },
+            {
+              "name": "createdAt"
+            },
+            {
+              "name": "messageId"
+            },
+            {
+              "name": "messageContent"
+            },
+            {
+              "name": "fileType"
+            },
+            {
+              "name": "fileUrl"
+            },
+            {
+              "name": "phoneNumber",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        48
+      ],
+      "id": "b1529986-7c67-497e-b9b1-99c4a5bdb6a2",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "human_interventions",
+        "key": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.phoneNumber }}_human_intervention",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1824,
+        48
+      ],
+      "id": "a2e2a2dd-e9cc-4813-8819-7e434f0c8e07",
+      "name": "Get human-intervention message",
+      "credentials": {
+        "redis": {
+          "id": "zlVWqKFSgUSVauIh",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38518b80-e87b-4924-a281-cefc8e115f0e",
+              "leftValue": "={{ $json.human_interventions.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "73f8391c-5882-48b1-8c1c-b43c3dc609a8",
+              "leftValue": "={{ $('Set data').item.json.messageFromMe }}",
+              "rightValue": "outgoing",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2048,
+        48
+      ],
+      "id": "4d433d89-f5da-4fd3-bfa8-e5051036ba9c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ace2d184-3bc9-40b5-91df-c96b84275149",
+              "leftValue": "filter",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        2496,
+        -48
+      ],
+      "id": "890987cb-8a90-4b34-bb23-43cd124b569c",
+      "name": "Filter"
+    }
+  ],
+  "connections": {
+    "Filter admin": {
+      "main": [
+        [
+          {
+            "node": "If filter all except admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter all except admin": {
+      "main": [
+        [
+          {
+            "node": "If firewall",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "firewall": {
+      "main": [
+        [
+          {
+            "node": "Get human-intervention message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "message-buffer": {
+      "main": [
+        [
+          {
+            "node": "If get memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcribe-media": {
+      "main": [
+        [
+          {
+            "node": "message-buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-memory": {
+      "main": [
+        [
+          {
+            "node": "If bot detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "language-detector": {
+      "main": [
+        [
+          {
+            "node": "If lead reactivation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "bot-detector": {
+      "main": [
+        [
+          {
+            "node": "If language detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "intention-analizer": {
+      "main": [
+        [
+          {
+            "node": "build-system-message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lead-reactivation": {
+      "main": [
+        [
+          {
+            "node": "If intention analizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build-system-message": {
+      "main": [
+        [
+          {
+            "node": "Return",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If filter admin": {
+      "main": [
+        [
+          {
+            "node": "Filter admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If filter all except admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If filter all except admin": {
+      "main": [
+        [
+          {
+            "node": "Filter all except admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If firewall",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If firewall": {
+      "main": [
+        [
+          {
+            "node": "firewall",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get human-intervention message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "If filter admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If get memory": {
+      "main": [
+        [
+          {
+            "node": "get-memory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If bot detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If bot detector": {
+      "main": [
+        [
+          {
+            "node": "bot-detector",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If language detector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If language detector": {
+      "main": [
+        [
+          {
+            "node": "language-detector",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If lead reactivation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If lead reactivation": {
+      "main": [
+        [
+          {
+            "node": "lead-reactivation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If intention analizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If intention analizer": {
+      "main": [
+        [
+          {
+            "node": "intention-analizer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "build-system-message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "human-intervention": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get human-intervention message": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "human-intervention",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "transcribe-media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
