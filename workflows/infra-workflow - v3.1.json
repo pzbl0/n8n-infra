@@ -30,7 +30,7 @@
       "typeVersion": 2.2,
       "position": [
         704,
-        -24
+        -32
       ],
       "id": "76a62353-0a87-41b2-8a5f-3fe02b2d8f44",
       "name": "Filter admin"
@@ -64,7 +64,7 @@
       "typeVersion": 2.2,
       "position": [
         1152,
-        -24
+        -32
       ],
       "id": "eedde1d1-8b48-455e-8692-2e5c8f919c37",
       "name": "Filter all except admin"
@@ -155,7 +155,7 @@
       "typeVersion": 1.2,
       "position": [
         1600,
-        -24
+        -32
       ],
       "id": "d9ed52d1-e3fa-4eb5-b5c5-08dc60730ccd",
       "name": "firewall"
@@ -175,7 +175,7 @@
             "messageTimestamp": "={{ $('Set data').item.json.createdAt }}",
             "messageContent": "={{ $json.text }}",
             "messageId": "={{ $('Set data').item.json.messageId }}",
-            "userId": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.phoneNumber }}_buffer"
+            "userId": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.phoneNumber }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -436,7 +436,7 @@
       "typeVersion": 1.2,
       "position": [
         4736,
-        72
+        80
       ],
       "name": "intention-analizer",
       "id": "c6140a66-c33b-464b-aa60-bf0e49a551c7"
@@ -485,7 +485,7 @@
       "typeVersion": 1.2,
       "position": [
         2944,
-        72
+        80
       ],
       "id": "45feab11-9edd-44d2-aa98-dd4f6fd0c8c3",
       "name": "get-memory"
@@ -536,7 +536,7 @@
       "typeVersion": 1.2,
       "position": [
         3840,
-        72
+        80
       ],
       "id": "4be8d595-d1a0-4eb4-9d2e-6c428e059cfc",
       "name": "language-detector"
@@ -669,7 +669,7 @@
       "typeVersion": 1.2,
       "position": [
         3392,
-        72
+        80
       ],
       "name": "bot-detector",
       "id": "f6da2f48-514b-4ece-91f3-c2280267d554"
@@ -786,7 +786,7 @@
       "typeVersion": 1.2,
       "position": [
         4288,
-        72
+        80
       ],
       "id": "1ffa4c4c-7106-44d9-8a0f-921c79efe9f1",
       "name": "lead-reactivation"
