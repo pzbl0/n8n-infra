@@ -1,0 +1,972 @@
+{
+  "name": "transcribe-media - v2.1",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "80d8e8e6-5809-4ed7-9e9b-aa3fc62520d1",
+                    "leftValue": "={{ $json.media_type }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a3ff7ac1-f0ba-4088-b891-25d18b2a33ab",
+                    "leftValue": "={{ $json.media_type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cb8d92e2-0bfa-4937-9ecd-d889ab15f6e1",
+                    "leftValue": "={{ $json.media_type }}",
+                    "rightValue": "file",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "File"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8572ff2b-4cf1-47fa-bd4d-6b9e8c6a6386",
+                    "leftValue": "={{ $json.media_type }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "text"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -656,
+        304
+      ],
+      "id": "0c0e1c13-a594-4304-95f1-5a94d37c7c84",
+      "name": "Content type"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        240,
+        -320
+      ],
+      "id": "6f0cdb36-2903-4236-b036-6b3684d65bd2",
+      "name": "Audio transcriber",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        240,
+        64
+      ],
+      "id": "75bc081f-085b-455b-afbe-0859638bc227",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "leOLHYOtXey0DgzA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f77c6a0-d2e5-4522-855f-f0f3d3db6d39",
+              "name": "text",
+              "value": "={{ $('When Executed by Another Workflow').item.json.message_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -432,
+        736
+      ],
+      "id": "e1287736-44a6-4532-8b0b-3ba7a7fa45dd",
+      "name": "Get text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f8902392-9dc9-4f23-af29-74f9e323a7da",
+              "name": "text",
+              "value": "=Audio converted to text:\n<audio>\n{{ $json.text }}\n</audio>\n\nText:\n{{ $('When Executed by Another Workflow').item.json.message_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        -320
+      ],
+      "id": "b28b5c35-8c1a-42f8-a338-b2c9e81d1e54",
+      "name": "Get text from audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "18e6bbe0-8c2a-409a-b2fa-c07a0f8b90b5",
+              "name": "text",
+              "value": "=Image converted to text:\n<image>\n{{ $json.content }}\n</image>\n\nText:\n{{ $('When Executed by Another Workflow').item.json.message_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        64
+      ],
+      "id": "5c8c2717-943a-4497-85cb-67e0b93cc8af",
+      "name": "Get text from image"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "message_id"
+            },
+            {
+              "name": "message_text"
+            },
+            {
+              "name": "media_type"
+            },
+            {
+              "name": "media_url"
+            },
+            {
+              "name": "instance_name"
+            },
+            {
+              "name": "instance_serverUrl"
+            },
+            {
+              "name": "instance_apikey"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -880,
+        352
+      ],
+      "id": "ec0ac696-77e5-4ad8-95fe-ee0e2a57f0e3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.media_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        16,
+        -416
+      ],
+      "id": "34fbe2fa-5e77-4048-90e4-407300d39817",
+      "name": "Download audio"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.media_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        352
+      ],
+      "id": "6a6719dd-1086-4eb8-b57a-57e93957badf",
+      "name": "Download file"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input items\nconst items = $input.all();\n\n// Process each item\nreturn items.map(item => {\n  // Safely access media_url with fallback\n  const url = item?.json?.media_url;\n  \n  // Extract extension only if url exists\n  const extension = url ? url.split('.').pop()?.split('?')[0] : null;\n  \n  // Return the original item with the new extension field\n  return {\n    json: {\n      ...item.json,\n      file_extension: extension || 'unknown' // Fallback if extension is null\n    }\n  };\n});"
+      },
+      "id": "21912c64-8af3-4684-9099-73f4df91466e",
+      "name": "Extract file extension",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -432,
+        544
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Extract file extension').item.json.file_extension }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "edc87861-0e56-4190-9a96-622b90c12bb7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        16,
+        448
+      ],
+      "id": "adc2d3bd-8b04-46d1-a562-0be00a5def81",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "K83007227088957"
+            },
+            {
+              "name": "language",
+              "value": "spa"
+            },
+            {
+              "name": "isOverlayRequired",
+              "value": "false"
+            },
+            {
+              "name": "OCREngine",
+              "value": "2"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        464,
+        544
+      ],
+      "id": "4a8a51a4-a582-43ab-b80c-74072e0958fb",
+      "name": "ocr.space"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "18e6bbe0-8c2a-409a-b2fa-c07a0f8b90b5",
+              "name": "text",
+              "value": "=File converted to text:\n{{ $json.ParsedResults[0].ParsedText }}\n\nText:\n{{ $('When Executed by Another Workflow').item.json.message_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        544
+      ],
+      "id": "b26b6404-8a52-4c3c-9385-9ec4b4b82c29",
+      "name": "Get text from pdf"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "18e6bbe0-8c2a-409a-b2fa-c07a0f8b90b5",
+              "name": "text",
+              "value": "=File shared:\n\"It is not possible to see this type of files.\"\n\nText:\n{{ $('When Executed by Another Workflow').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        544
+      ],
+      "id": "5c10a9a2-478f-435f-8533-dc0ac6afd7ad",
+      "name": "Get text1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "72732ddf-bb1f-4da1-8d4b-8f9a7b0ed316",
+              "leftValue": "={{ $('When Executed by Another Workflow').item.json.instance_apikey }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        64
+      ],
+      "id": "9a9c0d24-3227-40d1-b733-e3287333e150",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.media_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "fc5e2def-7128-4965-87fb-ed42a7b1d5cb",
+      "name": "Download image from Chatwoot"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.instance_serverUrl }}/chat/getBase64FromMediaMessage/{{ $json.instance_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('When Executed by Another Workflow').item.json.instance_apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message.key.id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.message_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -208,
+        160
+      ],
+      "id": "2a294c36-0f12-41ce-a1a1-2a69247cb8a1",
+      "name": "Download image from Evolution"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "72732ddf-bb1f-4da1-8d4b-8f9a7b0ed316",
+              "leftValue": "={{ $('When Executed by Another Workflow').item.json.instance_apikey }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        -320
+      ],
+      "id": "5b486153-7f85-4889-9e87-2c2ea8584043",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.instance_serverUrl }}/chat/getBase64FromMediaMessage/{{ $json.instance_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('When Executed by Another Workflow').item.json.instance_apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message.key.id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.message_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -208,
+        -224
+      ],
+      "id": "64dd7fb6-637f-472d-83fe-7444317e9920",
+      "name": "Download audio from Evolution"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "mimeType": "={{ $json.mimetype }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        -224
+      ],
+      "id": "4000fa90-e75a-426e-b0a5-9a02a80b6836",
+      "name": "Convert audio to file"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        160
+      ],
+      "id": "ef7c40cb-c121-4079-a764-f355a31c0bf1",
+      "name": "Convert image to file"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "72732ddf-bb1f-4da1-8d4b-8f9a7b0ed316",
+              "leftValue": "={{ $('When Executed by Another Workflow').item.json.instance_apikey }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        544
+      ],
+      "id": "6b196acf-cabb-4fe3-9139-4e72f851b6bf",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.instance_serverUrl }}/chat/getBase64FromMediaMessage/{{ $json.instance_name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('When Executed by Another Workflow').item.json.instance_apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message.key.id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.message_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        16,
+        736
+      ],
+      "id": "9e63e5c4-c55d-4554-8d17-c45674d197ec",
+      "name": "Download pdf from Evolution"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        736
+      ],
+      "id": "c986c849-b270-4cce-918e-6b75a2800b5a",
+      "name": "Convert pdf to file"
+    }
+  ],
+  "connections": {
+    "Content type": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract file extension",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Get text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio transcriber": {
+      "main": [
+        [
+          {
+            "node": "Get text from audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Get text from image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Content type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download audio": {
+      "main": [
+        [
+          {
+            "node": "Audio transcriber",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "ocr.space",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract file extension": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ocr.space": {
+      "main": [
+        [
+          {
+            "node": "Get text from pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Download image from Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download image from Evolution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image from Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image from Evolution": {
+      "main": [
+        [
+          {
+            "node": "Convert image to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Download audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download audio from Evolution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download audio from Evolution": {
+      "main": [
+        [
+          {
+            "node": "Convert audio to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert audio to file": {
+      "main": [
+        [
+          {
+            "node": "Audio transcriber",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert image to file": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download pdf from Evolution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download pdf from Evolution": {
+      "main": [
+        [
+          {
+            "node": "Convert pdf to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert pdf to file": {
+      "main": [
+        [
+          {
+            "node": "ocr.space",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
