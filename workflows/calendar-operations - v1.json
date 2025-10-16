@@ -338,7 +338,7 @@
         "end": "={{ $('Set data').item.json.event_end }}",
         "useDefaultReminders": false,
         "additionalFields": {
-          "description": "=Nombre: {{ $('Set data').item.json.client_name }}\nTeléfono: {{ $('Set data').item.json.client_phone }}\nID: {{ $('Set data').item.json.client_id }}",
+          "description": "=Nombre: {{ $('Set data').item.json.client_name }}\nTel\u00e9fono: {{ $('Set data').item.json.client_phone }}\nID: {{ $('Set data').item.json.client_id }}",
           "summary": "={{ $('Set data').item.json.client_name }} - {{ $('Set data').item.json.service }}"
         }
       },
@@ -514,7 +514,7 @@
           "__rl": true,
           "value": "={{ $('Set data').item.json.calendar_id }}",
           "mode": "id",
-          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+          "__regex": "(^[a-zA-Z0-9.!#$%&\u2019*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
         },
         "timeMin": "={{ $json.event_start }}",
         "timeMax": "={{ $json.event_end }}",
@@ -565,7 +565,7 @@
             {
               "id": "f8e27ba3-b0e3-4eab-bbb3-b8237130fae5",
               "name": "output",
-              "value": "El horario no está disponible",
+              "value": "El horario no est\u00e1 disponible",
               "type": "string"
             }
           ]
@@ -725,7 +725,7 @@
             {
               "id": "f499c080-1480-43d4-91cb-7fc6b0772cb3",
               "name": "output",
-              "value": "No encontré turnos agendados",
+              "value": "No encontr\u00e9 turnos agendados",
               "type": "string"
             }
           ]

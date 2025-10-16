@@ -28,7 +28,7 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n\t\"botDetected\": true,\n\t\"why\": \"porque la conversación se repite vez tras vez\"\n}",
+        "jsonSchemaExample": "{\n\t\"botDetected\": true,\n\t\"why\": \"porque la conversaci\u00f3n se repite vez tras vez\"\n}",
         "autoFix": true
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
@@ -172,10 +172,10 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Este es el último mensaje del usuario: {{ $('Start').item.json.userMessage }}",
+        "text": "=Este es el \u00faltimo mensaje del usuario: {{ $('Start').item.json.userMessage }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=Eres un agente especializado en detectar si el usuario es un bot. Tu única tarea es analizar un historial de mensajes/interacciones entre un usuario y un bot y determinar si el usuario es también un bot o un humano.\n\nDevuelve únicamente un JSON con el campo \"botDetected\": true si el usuario se trata de un bot, o false si es un humano y el campo \"why\" con la explicación de porque determinaste si es o no un bot.\n\nÚnicos patrones que revelan que el usuario es un bot:\n\n- Repetición exacta de mensajes.\n- El usuario se presenta como un bot, asistente virtual, etc.\n\nPosibles patrones que muestran que el usuario es un humano:\n\n- Mensajes breves.\n- Errores ortográficos.\n- Mensaje editado: aparece el texto \"Edited Message\"\n- El mensaje es solo un emoji\n- {{ $json.customInstructionsToDefineItsNotBot }}\n\nDeterminar que un usuario es un bot es una acción crítica y solo debes tomarla cuando no hay duda alguna.\n\nEjemplo de salida esperada:\n`{\"botDetected\": true, \"why\": \"Porque la conversación se repite vez tras vez.\"}`\n\n---\n\nEste es el historial de interacciones:\n\"{{ $('Start').item.json.chatHistory }}\"\n"
+          "systemMessage": "=Eres un agente especializado en detectar si el usuario es un bot. Tu \u00fanica tarea es analizar un historial de mensajes/interacciones entre un usuario y un bot y determinar si el usuario es tambi\u00e9n un bot o un humano.\n\nDevuelve \u00fanicamente un JSON con el campo \"botDetected\": true si el usuario se trata de un bot, o false si es un humano y el campo \"why\" con la explicaci\u00f3n de porque determinaste si es o no un bot.\n\n\u00danicos patrones que revelan que el usuario es un bot:\n\n- Repetici\u00f3n exacta de mensajes.\n- El usuario se presenta como un bot, asistente virtual, etc.\n\nPosibles patrones que muestran que el usuario es un humano:\n\n- Mensajes breves.\n- Errores ortogr\u00e1ficos.\n- Mensaje editado: aparece el texto \"Edited Message\"\n- El mensaje es solo un emoji\n- {{ $json.customInstructionsToDefineItsNotBot }}\n\nDeterminar que un usuario es un bot es una acci\u00f3n cr\u00edtica y solo debes tomarla cuando no hay duda alguna.\n\nEjemplo de salida esperada:\n`{\"botDetected\": true, \"why\": \"Porque la conversaci\u00f3n se repite vez tras vez.\"}`\n\n---\n\nEste es el historial de interacciones:\n\"{{ $('Start').item.json.chatHistory }}\"\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",

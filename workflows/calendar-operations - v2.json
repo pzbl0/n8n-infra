@@ -338,7 +338,7 @@
         "end": "={{ $('Set data').item.json.eventEnd }}",
         "useDefaultReminders": false,
         "additionalFields": {
-          "description": "=Nombre: {{ $('Set data').item.json.clientName }}\nTeléfono: {{ $('Set data').item.json.clientPhoneNumber }}\nID: {{ $('Set data').item.json.clientId }}",
+          "description": "=Nombre: {{ $('Set data').item.json.clientName }}\nTel\u00e9fono: {{ $('Set data').item.json.clientPhoneNumber }}\nID: {{ $('Set data').item.json.clientId }}",
           "summary": "={{ $('Set data').item.json.clientName }} - {{ $('Set data').item.json.eventName }}"
         }
       },
@@ -534,7 +534,7 @@
             {
               "id": "f8e27ba3-b0e3-4eab-bbb3-b8237130fae5",
               "name": "output",
-              "value": "El horario no está disponible",
+              "value": "El horario no est\u00e1 disponible",
               "type": "string"
             }
           ]
@@ -694,7 +694,7 @@
             {
               "id": "f499c080-1480-43d4-91cb-7fc6b0772cb3",
               "name": "output",
-              "value": "No encontré turnos agendados",
+              "value": "No encontr\u00e9 turnos agendados",
               "type": "string"
             }
           ]

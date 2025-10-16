@@ -1008,7 +1008,7 @@
             "user_message": "={{ $('message-buffer').item.json.output }}",
             "conversation_id": "={{ $('Set data').item.json.flowdata.conversation_id }}",
             "client_name": "={{ $('Set data').item.json.flowdata.project_name }}",
-            "system_messsage": "=## ROL:\n\nActúa como un analista de conversaciones para un asistente virtual. Se te proporcionará el historial del chat completo con el usuario y su último mensaje. Tu única tarea es analizar ese contenido y determinar qué tipo de acción se necesita para responder al usuario, y explicar por qué llegaste a esa conclusión.\n\nLas posibles opciones de respuesta son las siguientes:\n\n- `\"informacion-de-la-empresa\"` → Cuando el usuario solicita datos como ubicación de la empresa, los horarios de atención, los medios o políticas de pago, el alias para transferencias, los métodos o políticas de envío, políticas de cambios y devoluciones, redes sociales o el sitio web, o cualquier otra información propia de la empresa.\n- `\"asesoramiento\"` → Cuando el usuario necesita ayuda para tomar una decisión, si necesita precios de tinturas en general, carta/cartilla de colores o saber los tonos dispomibles, pregunta por tinturas sin amoníaco, cómo cubrir canas, hacer reflejos, tonalizar, entender qué es mejor para su caso, etc.\n- `\"buscador-de-productos\"` → Cuando el usuario está buscando un producto específico, disponibilidad, precio, o detalles de productos.\n- `\"cierre-de-venta\"` → Cuando en la última interacción el bot le pasó un pedido a confirmar y ahora el último mensaje del usuario confirma.\n- `\"general\"` → Ninguna de las anteriores.\n\n---\n\nDevuelve la respuesta en formato JSON como una lista de objetos, cada uno con las claves \"require\" y \"why\".\n\nDevuelve más de un objeto si la pregunta del usuario lo requiere. Es válido devolver uno, dos o más de dos objetos dependiendo del contenido del mensaje.\n\n---\n\n### Formato de salida:\n\n```json\n[\n  {\n    \"require\": \"informacion-de-la-empresa\",\n    \"why\": \"porque el usuario preguntó el horario de atención\"\n  },\n  {\n    \"require\": \"buscador-de-productos\",\n    \"why\": \"porque el usuario preguntó por disponibilidad del producto X\"\n  }\n]\n```\n",
+            "system_messsage": "=## ROL:\n\nAct\u00faa como un analista de conversaciones para un asistente virtual. Se te proporcionar\u00e1 el historial del chat completo con el usuario y su \u00faltimo mensaje. Tu \u00fanica tarea es analizar ese contenido y determinar qu\u00e9 tipo de acci\u00f3n se necesita para responder al usuario, y explicar por qu\u00e9 llegaste a esa conclusi\u00f3n.\n\nLas posibles opciones de respuesta son las siguientes:\n\n- `\"informacion-de-la-empresa\"` \u2192 Cuando el usuario solicita datos como ubicaci\u00f3n de la empresa, los horarios de atenci\u00f3n, los medios o pol\u00edticas de pago, el alias para transferencias, los m\u00e9todos o pol\u00edticas de env\u00edo, pol\u00edticas de cambios y devoluciones, redes sociales o el sitio web, o cualquier otra informaci\u00f3n propia de la empresa.\n- `\"asesoramiento\"` \u2192 Cuando el usuario necesita ayuda para tomar una decisi\u00f3n, si necesita precios de tinturas en general, carta/cartilla de colores o saber los tonos dispomibles, pregunta por tinturas sin amon\u00edaco, c\u00f3mo cubrir canas, hacer reflejos, tonalizar, entender qu\u00e9 es mejor para su caso, etc.\n- `\"buscador-de-productos\"` \u2192 Cuando el usuario est\u00e1 buscando un producto espec\u00edfico, disponibilidad, precio, o detalles de productos.\n- `\"cierre-de-venta\"` \u2192 Cuando en la \u00faltima interacci\u00f3n el bot le pas\u00f3 un pedido a confirmar y ahora el \u00faltimo mensaje del usuario confirma.\n- `\"general\"` \u2192 Ninguna de las anteriores.\n\n---\n\nDevuelve la respuesta en formato JSON como una lista de objetos, cada uno con las claves \"require\" y \"why\".\n\nDevuelve m\u00e1s de un objeto si la pregunta del usuario lo requiere. Es v\u00e1lido devolver uno, dos o m\u00e1s de dos objetos dependiendo del contenido del mensaje.\n\n---\n\n### Formato de salida:\n\n```json\n[\n  {\n    \"require\": \"informacion-de-la-empresa\",\n    \"why\": \"porque el usuario pregunt\u00f3 el horario de atenci\u00f3n\"\n  },\n  {\n    \"require\": \"buscador-de-productos\",\n    \"why\": \"porque el usuario pregunt\u00f3 por disponibilidad del producto X\"\n  }\n]\n```\n",
             "chat_history": "={{ $('get-memory').item.json.chat_history }}"
           },
           "matchingColumns": [
@@ -1145,7 +1145,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "user_message": "={{ $('message-buffer').item.json.output }}",
-            "default_language": "Español"
+            "default_language": "Espa\u00f1ol"
           },
           "matchingColumns": [],
           "schema": [
@@ -1198,7 +1198,7 @@
           "value": {
             "conversation_id": "={{ $('Set data').item.json.flowdata.conversation_id }}",
             "business_name": "={{ $('Set data').item.json.flowdata.project_name }}",
-            "language": "Español",
+            "language": "Espa\u00f1ol",
             "repo_name": "={{ $('Set data').item.json.flowdata.repo }}"
           },
           "matchingColumns": [
@@ -1274,7 +1274,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "userMessage": "={{ $('Set data').item.json.flowdata.content }}",
-            "customInstructionsToDefineItsNotBot": "si el mensaje dice campaña",
+            "customInstructionsToDefineItsNotBot": "si el mensaje dice campa\u00f1a",
             "chatHistory": "={{ $json.chat_history }}"
           },
           "matchingColumns": [
@@ -1331,7 +1331,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "=Usa la herramienta `company-advisor-agent` cuando para responder la consulta del cliente necesitas la siguiente información: Medios de contacto, redes sociales, ubicación, horarios de atención, medios de pago, alias para transferencia, descuentos o políticas de reserva, cómo se realizan los envíos, sus costos o tiempos de entrega, los cambios, devoluciones o garantías.\n\nUsa la herramienta `company-advisor-agent` generando el valor del input \"Prompt_user_message\" con toda la información necesaria para obtener una buena respuesta.\n\nEjemplos:\n\n- Si el cliente pidió la dirección usa esta herramienta con la \"query\": `Necesito la dirección del local`.\n\n- Si el cliente quiere saber si el local está abierto usa esta herramienta con la \"query\": `Necesito los horarios del local`.\n\n- Si el cliente quiere saber el alias usa esta herramienta con la \"query\": `Necesito el alias para realizar transferencias`.\n\n- Si el cliente quiere saber cuanto demora un envío usa esta herramienta con la \"query\": `Necesito los tiempos de envío`.\n\n- Si el cliente solicita medios de contacto o redes sociales usa esta herramienta con la \"query\": `Necesito los medios de contacto o las redes sociales`.\n\nUsa la herramienta `company-manager` generando el valor del input \"Prompt_user_message\" con toda la información necesaria para obtener una buena respuesta.\n\nEjemplos:\n\n- Si el cliente pidió la dirección usa esta herramienta con la \"query\": `Necesito la dirección del local`.\n\n- Si el cliente quiere saber si el local está abierto usa esta herramienta con la \"query\": `Necesito los horarios del local`.\n\n- Si el cliente quiere saber el alias usa esta herramienta con la \"query\": `Necesito el alias para realizar transferencias`.\n\n- Si el cliente quiere saber cuanto demora un envío usa esta herramienta con la \"query\": `Necesito los tiempos de envío`.\n\n- Si el cliente solicita medios de contacto o redes sociales usa esta herramienta con la \"query\": `Necesito los medios de contacto o las redes sociales`.\n",
+        "toolDescription": "=Usa la herramienta `company-advisor-agent` cuando para responder la consulta del cliente necesitas la siguiente informaci\u00f3n: Medios de contacto, redes sociales, ubicaci\u00f3n, horarios de atenci\u00f3n, medios de pago, alias para transferencia, descuentos o pol\u00edticas de reserva, c\u00f3mo se realizan los env\u00edos, sus costos o tiempos de entrega, los cambios, devoluciones o garant\u00edas.\n\nUsa la herramienta `company-advisor-agent` generando el valor del input \"Prompt_user_message\" con toda la informaci\u00f3n necesaria para obtener una buena respuesta.\n\nEjemplos:\n\n- Si el cliente pidi\u00f3 la direcci\u00f3n usa esta herramienta con la \"query\": `Necesito la direcci\u00f3n del local`.\n\n- Si el cliente quiere saber si el local est\u00e1 abierto usa esta herramienta con la \"query\": `Necesito los horarios del local`.\n\n- Si el cliente quiere saber el alias usa esta herramienta con la \"query\": `Necesito el alias para realizar transferencias`.\n\n- Si el cliente quiere saber cuanto demora un env\u00edo usa esta herramienta con la \"query\": `Necesito los tiempos de env\u00edo`.\n\n- Si el cliente solicita medios de contacto o redes sociales usa esta herramienta con la \"query\": `Necesito los medios de contacto o las redes sociales`.\n\nUsa la herramienta `company-manager` generando el valor del input \"Prompt_user_message\" con toda la informaci\u00f3n necesaria para obtener una buena respuesta.\n\nEjemplos:\n\n- Si el cliente pidi\u00f3 la direcci\u00f3n usa esta herramienta con la \"query\": `Necesito la direcci\u00f3n del local`.\n\n- Si el cliente quiere saber si el local est\u00e1 abierto usa esta herramienta con la \"query\": `Necesito los horarios del local`.\n\n- Si el cliente quiere saber el alias usa esta herramienta con la \"query\": `Necesito el alias para realizar transferencias`.\n\n- Si el cliente quiere saber cuanto demora un env\u00edo usa esta herramienta con la \"query\": `Necesito los tiempos de env\u00edo`.\n\n- Si el cliente solicita medios de contacto o redes sociales usa esta herramienta con la \"query\": `Necesito los medios de contacto o las redes sociales`.\n",
         "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
         "options": {
           "systemMessage": "={{ $('build-system-message').item.json['company-advisor-agent'] }}"
@@ -1423,7 +1423,7 @@
             "account_id": "={{ $('Set data').item.json.flowdata.account_id }}",
             "url": "={{ $('Set data').item.json.flowdata.url }}",
             "time_to_reactivate_in_hours": 24,
-            "campaing_text_to_recognize": "campaña",
+            "campaing_text_to_recognize": "campa\u00f1a",
             "text_to_reactive": "Texto para reactivar"
           },
           "matchingColumns": [],

@@ -1,5 +1,5 @@
 {
-  "name": "firewall - v2.6",
+  "name": "firewall",
   "nodes": [
     {
       "parameters": {
@@ -9,18 +9,7 @@
               "name": "projectName"
             },
             {
-              "name": "chatwootUrl"
-            },
-            {
-              "name": "accountId",
-              "type": "number"
-            },
-            {
-              "name": "conversationId",
-              "type": "number"
-            },
-            {
-              "name": "messageId",
+              "name": "userId",
               "type": "number"
             },
             {
@@ -38,7 +27,12 @@
               "name": "createdAt"
             },
             {
-              "name": "eventType"
+              "name": "numbers_to_ignore",
+              "type": "array"
+            },
+            {
+              "name": "isFile",
+              "type": "boolean"
             }
           ]
         }
@@ -49,7 +43,7 @@
         -1088,
         96
       ],
-      "id": "9050550a-2326-42f8-b05c-89ba9d1b65cb",
+      "id": "e587ce10-69e2-485f-9639-d66d37d077e7",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -83,7 +77,7 @@
         -416,
         96
       ],
-      "id": "1606d7b4-5d65-4742-a0b3-de38a16f418b",
+      "id": "32d4d204-b717-41dc-9644-dbb5bd8692e5",
       "name": "Filter human"
     },
     {
@@ -91,10 +85,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        256,
+        480,
         0
       ],
-      "id": "718f473d-ce50-4069-b40f-31fa6ae2a490",
+      "id": "eddcaa1f-7370-42a8-8a80-d476ea1072cd",
       "name": "Main flow"
     },
     {
@@ -114,27 +108,9 @@
               "type": "string"
             },
             {
-              "id": "6806ee3f-2fc1-494a-b6db-be6bdf21a74a",
-              "name": "chatwootUrl",
-              "value": "={{ $('When Executed by Another Workflow').item.json.chatwootUrl }}",
-              "type": "string"
-            },
-            {
-              "id": "6b2e066d-a2e7-495c-b19d-55a7ca362983",
-              "name": "accountId",
-              "value": "={{ $('When Executed by Another Workflow').item.json.accountId }}",
-              "type": "number"
-            },
-            {
-              "id": "256216a6-e2d4-4b6c-955c-bdcd9326be3c",
-              "name": "conversationId",
-              "value": "={{ $('When Executed by Another Workflow').item.json.conversationId }}",
-              "type": "number"
-            },
-            {
-              "id": "19a49c63-60f6-476f-b279-cf3c3d5b7d27",
-              "name": "messageId",
-              "value": "={{ $('When Executed by Another Workflow').item.json.messageId }}",
+              "id": "199ecbc8-99be-4311-a404-75c17c086b87",
+              "name": "userId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.userId }}",
               "type": "number"
             },
             {
@@ -144,10 +120,22 @@
               "type": "string"
             },
             {
+              "id": "e5242903-1d62-4d8b-b496-5cab6d97f434",
+              "name": "isFile",
+              "value": "={{ $('When Executed by Another Workflow').item.json.isFile }}",
+              "type": "boolean"
+            },
+            {
               "id": "83c84889-b33c-4371-a5ba-ee0717cc0f47",
               "name": "messageFromMe",
               "value": "={{ $('When Executed by Another Workflow').item.json.messageFromMe }}",
               "type": "boolean"
+            },
+            {
+              "id": "8341b9bb-bf35-4ec7-8baf-b9f3320bcf89",
+              "name": "numbers_to_ignore",
+              "value": "={{ $('When Executed by Another Workflow').item.json.numbers_to_ignore }}",
+              "type": "array"
             },
             {
               "id": "0270b2e3-a840-402b-ba56-e72368ba1d5f",
@@ -156,16 +144,10 @@
               "type": "boolean"
             },
             {
-              "id": "0acf821e-2563-458b-9f20-6a9873ed284b",
-              "name": "createdAt",
-              "value": "={{ $('When Executed by Another Workflow').item.json.createdAt }}",
-              "type": "string"
-            },
-            {
-              "id": "35b5bc23-fe92-444a-a1fe-85816f2d5a96",
-              "name": "eventType",
-              "value": "={{ $('When Executed by Another Workflow').item.json.eventType }}",
-              "type": "string"
+              "id": "0e40d4a0-3406-481e-8a1c-e9788a2429a1",
+              "name": "newMessage",
+              "value": "={{ $('When Executed by Another Workflow').item.json.newMessage }}",
+              "type": "boolean"
             }
           ]
         },
@@ -177,7 +159,7 @@
         -640,
         96
       ],
-      "id": "332e42c7-6a46-462c-96f3-e33b057ef12c",
+      "id": "18744893-0b99-4fea-9b3b-bb11a7076c64",
       "name": "Set data"
     },
     {
@@ -218,10 +200,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        256,
+        480,
         192
       ],
-      "id": "98c1adaa-fa08-4d3c-a135-fa6df323affa",
+      "id": "ffa27130-7c4b-4460-aca0-30c13ccc9b1e",
       "name": "Bot message?"
     },
     {
@@ -252,10 +234,10 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        704,
+        928,
         96
       ],
-      "id": "93dba6b8-0460-4b8d-a8b3-9fdb7e6cc49b",
+      "id": "084e15d3-ed54-43ed-ad4d-b708318bf280",
       "name": "Filter"
     },
     {
@@ -286,17 +268,17 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        32,
+        256,
         96
       ],
-      "id": "200b0ec8-9d11-4bf6-af8b-4c435afb30af",
+      "id": "a5e75824-f27e-4785-ad7c-52b2df1b1474",
       "name": "Incoming?"
     },
     {
       "parameters": {
         "operation": "get",
         "propertyName": "last_message",
-        "key": "={{ $json.projectName }}_{{ $json.accountId }}_{{ $json.conversationId }}",
+        "key": "={{ $json.projectName }}_{{ $json.userId }}_lastMessage",
         "keyType": "list",
         "options": {}
       },
@@ -306,7 +288,7 @@
         -864,
         96
       ],
-      "id": "49491915-e495-4e26-a9f7-1b362783bdf4",
+      "id": "06f32f20-0c7d-4b7b-93b9-2fa0a55e1970",
       "name": "Get last message",
       "credentials": {
         "redis": {
@@ -318,15 +300,15 @@
     {
       "parameters": {
         "operation": "delete",
-        "key": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.accountId }}_{{ $('Set data').item.json.conversationId }}"
+        "key": "={{ $('Set data').item.json.projectName }}_{{ $('Set data').item.json.userId }}_lastMessage"
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        480,
+        704,
         96
       ],
-      "id": "0d03c053-6a4d-49e5-b8c2-21a38fea25eb",
+      "id": "b9ecb2c9-a966-43d4-8559-0758ebd04dd9",
       "name": "Delete last message",
       "credentials": {
         "redis": {
@@ -334,6 +316,17 @@
           "name": "Redis account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        704,
+        288
+      ],
+      "id": "62ec60af-c138-49ed-9175-c159322d7fd0",
+      "name": "Main flow1"
     },
     {
       "parameters": {
@@ -346,21 +339,13 @@
           },
           "conditions": [
             {
-              "id": "4c890b60-be7b-496f-8d22-878ee2f87ad4",
-              "leftValue": "={{ $('Set data').item.json.eventType }}",
-              "rightValue": "message_created",
+              "id": "4f27ee11-4471-4d5c-883b-7e9ac5c03f66",
+              "leftValue": "={{ $('Set data').item.json.numbers_to_ignore }}",
+              "rightValue": "={{ $('Set data').item.json.userId }}",
               "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            },
-            {
-              "id": "06c82458-a425-4e4b-8a05-7118190ced82",
-              "leftValue": "={{ $('Set data').item.json.messageContent }}",
-              "rightValue": "undefined",
-              "operator": {
-                "type": "string",
-                "operation": "notContains"
+                "type": "array",
+                "operation": "notContains",
+                "rightType": "any"
               }
             }
           ],
@@ -374,19 +359,52 @@
         -192,
         96
       ],
-      "id": "095b476a-fea8-4f21-9c07-907eb01380c3",
-      "name": "Filter updated & undefined message"
+      "id": "23e0bd14-53e7-4854-96d6-6c957d0b981e",
+      "name": "Filter numbers to ignore"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b89483e-217d-4b66-b4dc-70e10758542d",
+              "leftValue": "={{ $json.messageContent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "99ce560b-193f-4d94-96cf-541feeb3ea87",
+              "leftValue": "={{ $('Set data').item.json.isFile }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
       "position": [
-        480,
-        288
+        32,
+        96
       ],
-      "id": "78d8b75b-06db-4870-a132-c3efd3f6a71a",
-      "name": "Main flow1"
+      "id": "24fce3e4-9df9-49fe-8af5-616288fa8fa3",
+      "name": "Filter empty message"
     }
   ],
   "connections": {
@@ -405,7 +423,7 @@
       "main": [
         [
           {
-            "node": "Filter updated & undefined message",
+            "node": "Filter numbers to ignore",
             "type": "main",
             "index": 0
           }
@@ -481,7 +499,18 @@
         ]
       ]
     },
-    "Filter updated & undefined message": {
+    "Filter numbers to ignore": {
+      "main": [
+        [
+          {
+            "node": "Filter empty message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter empty message": {
       "main": [
         [
           {

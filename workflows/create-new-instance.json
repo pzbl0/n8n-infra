@@ -174,7 +174,7 @@
         "resource": "messages-api",
         "instanceName": "={{ $('Set data').item.json.messageFromName }}",
         "remoteJid": "={{ $('Set data').item.json.numberToSendInfo }}",
-        "messageText": "El código QR fue correctamente enviado al cliente ✅",
+        "messageText": "El c\u00f3digo QR fue correctamente enviado al cliente \u2705",
         "options_message": {}
       },
       "type": "n8n-nodes-evolution-api.evolutionApi",
@@ -271,7 +271,7 @@
         "resource": "messages-api",
         "instanceName": "={{ $('Set data').item.json.messageFromName }}",
         "remoteJid": "={{ $('Set data').item.json.numberToSendInfo }}",
-        "messageText": "=El WhatsApp no pudo ser conectado ❌, vuelve a intentar.",
+        "messageText": "=El WhatsApp no pudo ser conectado \u274c, vuelve a intentar.",
         "options_message": {}
       },
       "type": "n8n-nodes-evolution-api.evolutionApi",
@@ -294,7 +294,7 @@
         "resource": "messages-api",
         "instanceName": "={{ $('Set data').item.json.messageFromName }}",
         "remoteJid": "={{ $('Set data').item.json.instanceNumber }}",
-        "messageText": "El WhatsApp fue conectado correctamente ✅",
+        "messageText": "El WhatsApp fue conectado correctamente \u2705",
         "options_message": {}
       },
       "type": "n8n-nodes-evolution-api.evolutionApi",
@@ -317,7 +317,7 @@
         "resource": "messages-api",
         "instanceName": "={{ $('Set data').item.json.messageFromName }}",
         "remoteJid": "={{ $('Set data').item.json.numberToSendInfo }}",
-        "messageText": "El WhatsApp fue conectado correctamente ✅",
+        "messageText": "El WhatsApp fue conectado correctamente \u2705",
         "options_message": {}
       },
       "type": "n8n-nodes-evolution-api.evolutionApi",
