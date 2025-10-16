@@ -1,0 +1,61 @@
+name: Deploy n8n workflows
+
+on:
+  push:
+    branches: [tuia]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Sanitize workflows
+        run: |
+          mkdir -p workflows-sanitized
+          for f in workflows-test/*.json; do
+            jq '{
+              name: .name,
+              nodes: .nodes,
+              connections: .connections,
+              settings: { executionOrder: .settings.executionOrder }
+            }' "$f" > "workflows-sanitized/$(basename $f)"
+          done
+
+      - name: Deploy to n8n Cloud
+        env:
+          N8N_API_KEY: ${{ secrets.N8N_TUIA_API_KEY }}
+          N8N_CLOUD_URL: ${{ secrets.N8N_TUIA_CLOUD_URL }}
+        run: |
+          for f in workflows-sanitized/*.json; do
+            NAME=$(jq -r '.name' "$f")
+            echo "Processing workflow: $NAME"
+
+            # 1. Try to find existing workflow by name
+            EXISTING=$(curl -s -H "X-N8N-API-KEY: $N8N_API_KEY" \
+              "$N8N_CLOUD_URL/api/v1/workflows" | jq ".data[] | select(.name==\"$NAME\")")
+
+            if [ -n "$EXISTING" ]; then
+              ID=$(echo "$EXISTING" | jq -r '.id')
+              echo "→ Updating existing workflow (id=$ID)"
+              curl -s -X PUT "$N8N_CLOUD_URL/api/v1/workflows/$ID" \
+                -H "Content-Type: application/json" \
+                -H "X-N8N-API-KEY: $N8N_API_KEY" \
+                --data @"$f" \
+                -o response.json -w "\nHTTP %{http_code}\n"
+            else
+              echo "→ Creating new workflow"
+              curl -s -X POST "$N8N_CLOUD_URL/api/v1/workflows" \
+                -H "Content-Type: application/json" \
+                -H "X-N8N-API-KEY: $N8N_API_KEY" \
+                --data @"$f" \
+                -o response.json -w "\nHTTP %{http_code}\n"
+            fi
+
+            echo "Response:"
+            cat response.json | jq '.id, .name'
+          done
