@@ -1,0 +1,124 @@
+{
+  "name": "error-handle",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -32
+      ],
+      "id": "116232cf-65a0-4c91-a0c4-350468e8afb4",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "11fcbdcb-6531-44ad-bf7c-7417c39536eb",
+              "name": "date",
+              "value": "={{ $now.format('yyyy-MM-dd - HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "da93f129-26c6-43cf-a953-9a5a8d8828ef",
+              "name": "client",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "ac44d487-3129-485e-92ba-70f7e700e459",
+              "name": "report",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "49efa4cf-d8a7-466e-a102-b1801a170b50",
+              "name": "workflow",
+              "value": "infra-workflow",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        -32
+      ],
+      "id": "8d1facd9-1d46-4fcd-a1dc-3e1b31bf31a4",
+      "name": "data"
+    },
+    {
+      "parameters": {
+        "tableId": "events",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "client",
+              "fieldValue": "={{ $json.client }}"
+            },
+            {
+              "fieldId": "report_name",
+              "fieldValue": "={{ $json.report }}"
+            },
+            {
+              "fieldId": "workflow",
+              "fieldValue": "={{ $json.workflow }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -32
+      ],
+      "id": "32b1c418-d5a6-4b0f-8b58-9f807bc44a3b",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "VYar2T8Ys4oMLPgC",
+          "name": "Sinapzia"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
