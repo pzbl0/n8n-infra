@@ -1,5 +1,5 @@
 {
-  "name": "message-buffer - v2",
+  "name": "message-buffer",
   "nodes": [
     {
       "parameters": {
@@ -12,10 +12,12 @@
       "typeVersion": 1,
       "position": [
         -656,
-        128
+        120
       ],
       "id": "9baff893-60d2-479a-9280-e9c95ae0400c",
       "name": "Get messages",
+      "executeOnce": false,
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
@@ -34,10 +36,11 @@
       "typeVersion": 1,
       "position": [
         -880,
-        128
+        120
       ],
       "id": "32df0550-dfdc-4afb-8caa-47c4253decf2",
       "name": "Push messages",
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
@@ -53,7 +56,7 @@
       "typeVersion": 1.1,
       "position": [
         16,
-        224
+        216
       ],
       "id": "2c02ad2e-b0df-4d9e-ac09-970b1ff9c04a",
       "name": "Wait",
@@ -72,6 +75,7 @@
       ],
       "id": "1fef7a27-7023-4734-99da-4625e00ebcd3",
       "name": "Delete messages",
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
@@ -129,7 +133,7 @@
       "typeVersion": 1.1,
       "position": [
         -1328,
-        128
+        120
       ],
       "id": "2d27f32a-1115-41b7-a8fb-a33292478234",
       "name": "When Executed by Another Workflow"
@@ -146,7 +150,7 @@
           "conditions": [
             {
               "id": "4fbc21dc-7879-4474-bb5c-e56216fa05b4",
-              "leftValue": "={{ JSON.parse($json.list_array.first()).id }}",
+              "leftValue": "={{ JSON.parse($json.list_array?.first()).id }}",
               "rightValue": "={{ $('Data').item.json.message.id }}",
               "operator": {
                 "type": "string",
@@ -253,7 +257,7 @@
       "typeVersion": 3.4,
       "position": [
         -1104,
-        128
+        120
       ],
       "id": "37103bc1-c9eb-4f49-a164-618a5be9f470",
       "name": "Data"
