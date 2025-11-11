@@ -178,7 +178,7 @@
               "rightValue": "=",
               "operator": {
                 "type": "string",
-                "operation": "exists",
+                "operation": "notEmpty",
                 "singleValue": true
               }
             },
