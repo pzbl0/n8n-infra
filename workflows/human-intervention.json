@@ -16,6 +16,7 @@
       ],
       "id": "5d3c988d-b23c-4eb3-aa09-5dd31db29923",
       "name": "Push messages",
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
@@ -104,6 +105,7 @@
       ],
       "id": "b5dcf6bb-4b1f-4791-90aa-cf3fdaab5198",
       "name": "Delete client messages",
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
@@ -162,6 +164,7 @@
       ],
       "id": "78d6345d-213c-4aa9-a5e7-811f1a2d3c96",
       "name": "Get messages",
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
@@ -309,6 +312,7 @@
       ],
       "id": "f13a0665-99d5-48b6-bbe1-391365d4a333",
       "name": "Set TTL",
+      "retryOnFail": true,
       "credentials": {
         "redis": {
           "id": "zlVWqKFSgUSVauIh",
