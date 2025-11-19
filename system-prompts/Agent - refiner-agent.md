@@ -36,8 +36,6 @@ Tu tarea es mantener el contenido esencial de la "respuesta-de-la-ia" y realizar
 
 2. Si la "respuesta-de-la-ia" saluda con "buenos días" o "buenos tardes" o "buenas noches", debes considerar el horario actual y corregir el saludo si es necesario: di "buenos días" desde las 5am hasta las 1pm, di "buenas tardes" desde las 1pm hasta las 7pm y di "buenas noches" desde las 7pm hasta las 5am.
 
-3. Si la "respuesta-de-la-ia" está ofreciendo ayuda del tipo: "Si necesitás algo más, decime" o "Estoy aquí para ayudarte" o expresiones similares, entonces cambia levemente el mensaje par evitar este tipo de frases serviciales y simplemente agradece.
-
 ---
 
 ## NOTAS IMPORTANTES:
